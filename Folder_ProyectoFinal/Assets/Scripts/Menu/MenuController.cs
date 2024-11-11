@@ -6,14 +6,7 @@ public class MenuController : MonoBehaviour
     public void PlayGame()
     {
         SceneManager.LoadScene("Game");
-    }
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
+        MusicManager.Instance.StopAllMusic();
+        MusicManager.Instance.PlayGameMusic();
     }
 }

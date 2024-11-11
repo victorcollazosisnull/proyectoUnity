@@ -42,8 +42,11 @@ public class LaraCroftMovement : MonoBehaviour
     [SerializeField] private bool isGrounded;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundDistance = 0.4f;
-    [SerializeField] private LayerMask groundMask; 
+    [SerializeField] private LayerMask groundMask;
 
+    [Header("Lara Croft Sounds")]
+    private bool isRunning = false;
+    private bool isMoving = false;
     void Awake()
     {
         LaraRigidbody = GetComponent<Rigidbody>();
@@ -86,6 +89,24 @@ public class LaraCroftMovement : MonoBehaviour
 
         bool isCrouchWalking = LaraisCrouching && movementInput != Vector3.zero;
         OnCrouchWalkingAnimation?.Invoke(isCrouchWalking); // Events CrounchedAnimation
+
+        isMoving = movementInput != Vector3.zero;
+
+        if (isMoving && isGrounded)
+        {
+            if (LaraIsRunning)
+            {
+                SFXManager.Instance.PlayRunningSound(); 
+            }
+            else
+            {
+                SFXManager.Instance.PlayWalkingSound(); 
+            }
+        }
+        else
+        {
+            SFXManager.Instance.StopFootstepsSound(); 
+        }
     }
     //------------Jump3D--------------
     private void Jumping()
