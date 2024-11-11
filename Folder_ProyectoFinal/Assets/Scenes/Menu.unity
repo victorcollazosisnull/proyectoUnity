@@ -2366,10 +2366,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16c773ccbd0a7c749b5c03e67e61095f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sfxAudioMixerGroup: {fileID: -6317466495573279847, guid: cf372475021e9cb409299c03cfe99af1,
-    type: 2}
-  LaraCroftWalkSound: {fileID: 8300000, guid: cc0af3e1e2b429949be6e3d6ea0234e9, type: 3}
-  LaraCroftRunSound: {fileID: 8300000, guid: cc0af3e1e2b429949be6e3d6ea0234e9, type: 3}
+  walkSoundData: {fileID: 11400000, guid: 363e39e618bea3b4197a300dbf9713b7, type: 2}
+  runSoundData: {fileID: 11400000, guid: 363e39e618bea3b4197a300dbf9713b7, type: 2}
 --- !u!1 &1045895128
 GameObject:
   m_ObjectHideFlags: 0
@@ -4281,10 +4279,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8425bbacb2a44f94dae610243742115f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  musicAudioMixerGroup: {fileID: -4999895819225476574, guid: cf372475021e9cb409299c03cfe99af1,
-    type: 2}
-  menuMusic: {fileID: 8300000, guid: 5699359ebe6637c44a2875144bfb11c8, type: 3}
-  gameMusic: {fileID: 8300000, guid: 19405c0ba2d4675479a1a2d5840c7a67, type: 3}
+  menuMusicData: {fileID: 11400000, guid: 837cc46df45070b40bf3424fc8ab2b89, type: 2}
+  gameMusicData: {fileID: 11400000, guid: f63938e67ec5f7e42a8d09b8080e184c, type: 2}
 --- !u!1 &1955953430
 GameObject:
   m_ObjectHideFlags: 0

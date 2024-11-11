@@ -6,9 +6,8 @@ using UnityEngine.Audio;
 public class MusicManager : MonoBehaviour
 {
     public static MusicManager Instance { get; private set; }
-    public AudioMixerGroup musicAudioMixerGroup;
-    public AudioClip menuMusic;
-    public AudioClip gameMusic;
+    public AudioClipsSO menuMusicData;
+    public AudioClipsSO gameMusicData;
     private AudioSource audioSource;
 
     private void Awake()
@@ -24,32 +23,33 @@ public class MusicManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
     private void Start()
     {
-        audioSource = gameObject.AddComponent<AudioSource>();
-        audioSource.outputAudioMixerGroup = musicAudioMixerGroup;
         PlayMenuMusic();
     }
+
+    private void ConfigureAudioSource(AudioClipsSO clipData)
+    {
+        audioSource.clip = clipData.clip;
+        audioSource.outputAudioMixerGroup = clipData.mixerGroup;
+        audioSource.volume = clipData.volume;
+        audioSource.pitch = clipData.pitch;
+        audioSource.loop = true;
+    }
+
     public void PlayMenuMusic()
     {
-        if (audioSource.clip != menuMusic)
-        {
-            audioSource.Stop();
-            audioSource.clip = menuMusic;
-            audioSource.loop = true;
-            audioSource.Play();
-        }
+        ConfigureAudioSource(menuMusicData);
+        audioSource.Play();
     }
+
     public void PlayGameMusic()
     {
-        if (audioSource.clip != gameMusic)
-        {
-            audioSource.Stop();
-            audioSource.clip = gameMusic;
-            audioSource.loop = true;
-            audioSource.Play();
-        }
+        ConfigureAudioSource(gameMusicData);
+        audioSource.Play();
     }
+
     public void StopAllMusic()
     {
         audioSource.Stop();

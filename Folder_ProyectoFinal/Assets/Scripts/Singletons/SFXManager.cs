@@ -7,11 +7,9 @@ using UnityEngine.VFX;
 public class SFXManager : MonoBehaviour
 {
     public static SFXManager Instance { get; private set; }
-    public AudioMixerGroup sfxAudioMixerGroup;
     private AudioSource audioSource;
-    [Header("Lara Croft Sounds")]
-    public AudioClip LaraCroftWalkSound;
-    public AudioClip LaraCroftRunSound;
+    public AudioClipsSO walkSoundData;
+    public AudioClipsSO runSoundData;
 
     private void Awake()
     {
@@ -19,36 +17,33 @@ public class SFXManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            audioSource = gameObject.AddComponent<AudioSource>();
         }
         else
         {
             Destroy(gameObject);
         }
     }
-    private void Start()
+
+    private void ConfigureAudioSource(AudioClipsSO clipData)
     {
-        audioSource = gameObject.AddComponent<AudioSource>();
-        audioSource.outputAudioMixerGroup = sfxAudioMixerGroup;
+        audioSource.clip = clipData.clip;
+        audioSource.outputAudioMixerGroup = clipData.mixerGroup;
+        audioSource.volume = clipData.volume;
+        audioSource.pitch = clipData.pitch;
         audioSource.loop = true;
     }
+
     public void PlayWalkingSound()
     {
-        if (!audioSource.isPlaying || audioSource.clip != LaraCroftWalkSound)
-        {
-            audioSource.clip = LaraCroftWalkSound;
-            audioSource.Play();
-            audioSource.pitch = 0.7f; 
-        }
+        ConfigureAudioSource(walkSoundData);
+        audioSource.Play();
     }
 
     public void PlayRunningSound()
     {
-        if (!audioSource.isPlaying || audioSource.clip != LaraCroftRunSound)
-        {
-            audioSource.clip = LaraCroftRunSound;
-            audioSource.Play();
-            audioSource.pitch = 3f; 
-        }
+        ConfigureAudioSource(runSoundData);
+        audioSource.Play();
     }
 
     public void StopFootstepsSound()
