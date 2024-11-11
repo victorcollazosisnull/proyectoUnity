@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c8a1fd0635582f747a0f54418aed3bd7
+guid: 9bc0d32b3cb4e2a429bdc4827cca4426
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -36,8 +36,8 @@ ModelImporter:
       name: LaraCroftJUMP
       takeName: mixamo.com
       internalID: -203655887218126122
-      firstFrame: 1
-      lastFrame: 50
+      firstFrame: 19
+      lastFrame: 52
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -49,7 +49,7 @@ ModelImporter:
       loopBlendOrientation: 1
       loopBlendPositionY: 1
       loopBlendPositionXZ: 1
-      keepOriginalOrientation: 1
+      keepOriginalOrientation: 0
       keepOriginalPositionY: 1
       keepOriginalPositionXZ: 0
       heightFromFeet: 0

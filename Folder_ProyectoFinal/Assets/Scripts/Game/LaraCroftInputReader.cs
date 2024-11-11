@@ -4,6 +4,7 @@ using System;
 
 public class LaraCroftInputReader : MonoBehaviour
 {
+    // Events Inputs
     public event Action<Vector2> OnMovementInput;
     public event Action OnJumpInput;
     public event Action<bool> OnRunningInput;

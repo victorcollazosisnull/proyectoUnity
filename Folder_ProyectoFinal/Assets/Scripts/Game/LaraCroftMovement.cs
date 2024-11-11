@@ -4,32 +4,34 @@ using UnityEngine.InputSystem;
 
 public class LaraCroftMovement : MonoBehaviour
 {
-    [Header("Lara Croft Movement")]
+    // Components
     private Rigidbody LaraRigidbody;
-    public float LaraWalk;
-    public float LaraRun;
-    private bool LaraIsRunning = false;
-    public float mouseSensitivity;
+    private LaraCroftInputReader inputReader;
+    private Animator LaraAnimator;
+
+    [Header("Lara Croft Movement")]
+    [SerializeField] private float LaraWalk;
+    [SerializeField] public float LaraRun;
+    [SerializeField] private bool LaraIsRunning = false;
+    [SerializeField] private float mouseSensitivity;
     public Transform cameraTransform;
     private Vector3 movementInput;
     private float mouseX, mouseY;
     private float xRotation = 0f;
-    public float LarajumpForce = 5f;
+    [SerializeField] private float LarajumpForce = 5f;
 
-    private LaraCroftInputReader inputReader;
-    private Animator LaraAnimator;
-
-    public event Action<bool> OnMovementAnimation; 
-    public event Action<bool> OnJumpingAnimation; 
+    // Events Animations
+    public event Action<bool> OnMovementAnimation;
+    public event Action OnJumpingAnimation;
     public event Action<bool> OnRunningAnimation; 
 
-    [Header("Raycast")]
-    private bool isJumping = false; 
-    private bool isWalking = false; 
-    public bool isGrounded; 
-    public Transform groundCheck; 
-    public float groundDistance = 0.4f;
-    public LayerMask groundMask; 
+    [Header("Raycast Detection Floor")]
+    [SerializeField] private bool isJumping = false;
+    [SerializeField] private bool isWalking = false;
+    [SerializeField] private bool isGrounded;
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private float groundDistance = 0.4f;
+    [SerializeField] private LayerMask groundMask; 
 
     void Awake()
     {
@@ -38,13 +40,13 @@ public class LaraCroftMovement : MonoBehaviour
         inputReader = FindAnyObjectByType<LaraCroftInputReader>();
     }
 
-    private void Start()
+    private void Start() 
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
-
-    private void OnEnable()
+    //------------Sub Input Reader--------------
+    private void OnEnable() 
     {
         inputReader.OnMovementInput += Movement;
         inputReader.OnJumpInput += Jumping;
@@ -52,49 +54,41 @@ public class LaraCroftMovement : MonoBehaviour
         inputReader.OnMouseInput += MouseMovement;
     }
 
-    private void OnDisable()
+    private void OnDisable() 
     {
         inputReader.OnMovementInput -= Movement;
         inputReader.OnJumpInput -= Jumping;
         inputReader.OnRunningInput -= Running;
         inputReader.OnMouseInput -= MouseMovement;
     }
-
+    //------------Movement3D--------------
     private void Movement(Vector2 input)
     {
         movementInput = new Vector3(input.x, 0, input.y);
 
-        bool isWalking = movementInput != Vector3.zero && !LaraIsRunning;
-        OnMovementAnimation?.Invoke(isWalking);
+        bool isWalking = movementInput != Vector3.zero && !LaraIsRunning; 
+        OnMovementAnimation?.Invoke(isWalking); // Events WalkAnimation
     }
-
+    //------------Jump3D--------------
     private void Jumping()
     {
         if (isJumping || !isGrounded)
         {
-            return; 
+            return;
         }
-        if (LaraIsRunning)
-        {
-            OnJumpingAnimation?.Invoke(true);
-        }
-        else
-        {
-            OnJumpingAnimation?.Invoke(false);
-        }
-
-        isJumping = true; 
-        Jump();
+        OnJumpingAnimation?.Invoke(); // Events JumpAnimation
+        isJumping = true;
+        Jump();  
         isGrounded = false;
     }
-
+    //------------Run3D--------------
     private void Running(bool isRunning)
     {
         LaraIsRunning = isRunning && movementInput != Vector3.zero;
 
-        OnRunningAnimation?.Invoke(LaraIsRunning);
+        OnRunningAnimation?.Invoke(LaraIsRunning); // Events RunAnimation
     }
-
+    //------------Mouse3D--------------
     private void MouseMovement(Vector2 lookInput)
     {
         mouseX = lookInput.x * mouseSensitivity * Time.deltaTime;
@@ -143,7 +137,7 @@ public class LaraCroftMovement : MonoBehaviour
         if (isGrounded && isJumping)
         {
             isJumping = false;
-            OnJumpingAnimation?.Invoke(false); 
+            OnJumpingAnimation?.Invoke(); 
         }
     }
 }
