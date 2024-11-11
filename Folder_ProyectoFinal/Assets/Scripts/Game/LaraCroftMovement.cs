@@ -16,9 +16,9 @@ public class LaraCroftMovement : MonoBehaviour
     [SerializeField] public float LaraRun;
     [SerializeField] private bool LaraIsRunning = false;
     //------CROUNCHED------
-    private bool isCrouching = false; 
-    private bool isWalkingCrouched = false;
-    //------CAMERA------}
+    private bool LaraisCrouching = false; 
+    private bool LaraisWalkingCrouched = false;
+    //------CAMERA------
     [SerializeField] private float mouseSensitivity;
     public Transform cameraTransform;
     private Vector3 movementInput;
@@ -26,7 +26,8 @@ public class LaraCroftMovement : MonoBehaviour
     private float xRotation = 0f;
     //------JUMP------
     [SerializeField] private float LarajumpForce = 5f;
-
+    //------CAMERA AIM------
+    private bool LaraIsAiming = false;
     // Events Animations
     public event Action<bool> OnMovementAnimation;
     public event Action OnJumpingAnimation;
@@ -63,6 +64,7 @@ public class LaraCroftMovement : MonoBehaviour
         inputReader.OnRunningInput += Running;
         inputReader.OnMouseInput += MouseMovement;
         inputReader.OnCrouchInput += Crouch;
+        inputReader.OnAimInput += HandleAimInput;
     }
 
     private void OnDisable() 
@@ -72,22 +74,23 @@ public class LaraCroftMovement : MonoBehaviour
         inputReader.OnRunningInput -= Running;
         inputReader.OnMouseInput -= MouseMovement;
         inputReader.OnCrouchInput -= Crouch;
+        inputReader.OnAimInput -= HandleAimInput;
     }
     //------------Movement3D--------------
     private void Movement(Vector2 input)
     {
         movementInput = new Vector3(input.x, 0, input.y);
 
-        bool isWalking = movementInput != Vector3.zero && !LaraIsRunning && !isCrouching;
+        bool isWalking = movementInput != Vector3.zero && !LaraIsRunning && !LaraisCrouching;
         OnMovementAnimation?.Invoke(isWalking); // Events WalkAnimation
 
-        bool isCrouchWalking = isCrouching && movementInput != Vector3.zero;
+        bool isCrouchWalking = LaraisCrouching && movementInput != Vector3.zero;
         OnCrouchWalkingAnimation?.Invoke(isCrouchWalking); // Events CrounchedAnimation
     }
     //------------Jump3D--------------
     private void Jumping()
     {
-        if (isJumping || !isGrounded || isCrouching)
+        if (isJumping || !isGrounded || LaraisCrouching || LaraIsAiming)
         {
             return;
         }
@@ -99,7 +102,7 @@ public class LaraCroftMovement : MonoBehaviour
     //------------Run3D--------------
     private void Running(bool isRunning)
     {
-        if (isCrouching) 
+        if (LaraisCrouching || LaraIsAiming) 
         {
             isRunning = false;
         }
@@ -110,15 +113,19 @@ public class LaraCroftMovement : MonoBehaviour
     //------------Crounched3D--------------
     private void Crouch()
     {
-        if (isCrouching)
+        if (LaraIsAiming)
         {
-            isCrouching = false;
+            return; 
+        }
+        else if (LaraisCrouching)
+        {
+            LaraisCrouching = false;
             OnStandUpAnimation?.Invoke(); 
             OnCrouchAnimation?.Invoke(false); 
         }
         else
         {
-            isCrouching = true;
+            LaraisCrouching = true;
             OnCrouchAnimation?.Invoke(true); 
         }
     }
@@ -133,6 +140,10 @@ public class LaraCroftMovement : MonoBehaviour
     {
         RotateCamera();
         CheckGroundStatus(); 
+    }
+    private void HandleAimInput(bool isAiming)
+    {
+        this.LaraIsAiming = isAiming;
     }
 
     private void Jump()

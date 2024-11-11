@@ -10,6 +10,7 @@ public class LaraCroftInputReader : MonoBehaviour
     public event Action<bool> OnRunningInput;
     public event Action<Vector2> OnMouseInput;
     public event Action OnCrouchInput;
+    public event Action<bool> OnAimInput;
 
     public void ReadDirection(InputAction.CallbackContext context)
     {
@@ -39,5 +40,10 @@ public class LaraCroftInputReader : MonoBehaviour
     {
         Vector2 lookInput = context.ReadValue<Vector2>();
         OnMouseInput?.Invoke(lookInput);
+    }
+    public void ReadAim(InputAction.CallbackContext context)
+    {
+        bool isAiming = context.performed;
+        OnAimInput?.Invoke(isAiming); 
     }
 }
