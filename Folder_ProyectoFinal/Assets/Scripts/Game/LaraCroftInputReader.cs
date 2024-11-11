@@ -9,6 +9,7 @@ public class LaraCroftInputReader : MonoBehaviour
     public event Action OnJumpInput;
     public event Action<bool> OnRunningInput;
     public event Action<Vector2> OnMouseInput;
+    public event Action OnCrouchInput;
 
     public void ReadDirection(InputAction.CallbackContext context)
     {
@@ -26,6 +27,13 @@ public class LaraCroftInputReader : MonoBehaviour
     {
         bool isRunning = context.performed;
         OnRunningInput?.Invoke(isRunning);
+    }
+    public void ReadCrouch(InputAction.CallbackContext context)
+    {
+        if (context.performed) 
+        {
+            OnCrouchInput?.Invoke(); 
+        }
     }
     public void ReadMouseInput(InputAction.CallbackContext context)
     {

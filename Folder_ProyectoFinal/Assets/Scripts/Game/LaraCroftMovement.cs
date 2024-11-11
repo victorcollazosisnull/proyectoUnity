@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.EnhancedTouch;
 
 public class LaraCroftMovement : MonoBehaviour
 {
@@ -10,20 +11,29 @@ public class LaraCroftMovement : MonoBehaviour
     private Animator LaraAnimator;
 
     [Header("Lara Croft Movement")]
+    //------MOVEMENT------
     [SerializeField] private float LaraWalk;
     [SerializeField] public float LaraRun;
     [SerializeField] private bool LaraIsRunning = false;
+    //------CROUNCHED------
+    private bool isCrouching = false; 
+    private bool isWalkingCrouched = false;
+    //------CAMERA------}
     [SerializeField] private float mouseSensitivity;
     public Transform cameraTransform;
     private Vector3 movementInput;
     private float mouseX, mouseY;
     private float xRotation = 0f;
+    //------JUMP------
     [SerializeField] private float LarajumpForce = 5f;
 
     // Events Animations
     public event Action<bool> OnMovementAnimation;
     public event Action OnJumpingAnimation;
-    public event Action<bool> OnRunningAnimation; 
+    public event Action<bool> OnRunningAnimation;
+    public event Action<bool> OnCrouchAnimation; 
+    public event Action<bool> OnCrouchWalkingAnimation;
+    public event Action OnStandUpAnimation;
 
     [Header("Raycast Detection Floor")]
     [SerializeField] private bool isJumping = false;
@@ -52,6 +62,7 @@ public class LaraCroftMovement : MonoBehaviour
         inputReader.OnJumpInput += Jumping;
         inputReader.OnRunningInput += Running;
         inputReader.OnMouseInput += MouseMovement;
+        inputReader.OnCrouchInput += Crouch;
     }
 
     private void OnDisable() 
@@ -60,19 +71,23 @@ public class LaraCroftMovement : MonoBehaviour
         inputReader.OnJumpInput -= Jumping;
         inputReader.OnRunningInput -= Running;
         inputReader.OnMouseInput -= MouseMovement;
+        inputReader.OnCrouchInput -= Crouch;
     }
     //------------Movement3D--------------
     private void Movement(Vector2 input)
     {
         movementInput = new Vector3(input.x, 0, input.y);
 
-        bool isWalking = movementInput != Vector3.zero && !LaraIsRunning; 
+        bool isWalking = movementInput != Vector3.zero && !LaraIsRunning && !isCrouching;
         OnMovementAnimation?.Invoke(isWalking); // Events WalkAnimation
+
+        bool isCrouchWalking = isCrouching && movementInput != Vector3.zero;
+        OnCrouchWalkingAnimation?.Invoke(isCrouchWalking); // Events CrounchedAnimation
     }
     //------------Jump3D--------------
     private void Jumping()
     {
-        if (isJumping || !isGrounded)
+        if (isJumping || !isGrounded || isCrouching)
         {
             return;
         }
@@ -84,9 +99,28 @@ public class LaraCroftMovement : MonoBehaviour
     //------------Run3D--------------
     private void Running(bool isRunning)
     {
+        if (isCrouching) 
+        {
+            isRunning = false;
+        }
         LaraIsRunning = isRunning && movementInput != Vector3.zero;
 
         OnRunningAnimation?.Invoke(LaraIsRunning); // Events RunAnimation
+    }
+    //------------Crounched3D--------------
+    private void Crouch()
+    {
+        if (isCrouching)
+        {
+            isCrouching = false;
+            OnStandUpAnimation?.Invoke(); 
+            OnCrouchAnimation?.Invoke(false); 
+        }
+        else
+        {
+            isCrouching = true;
+            OnCrouchAnimation?.Invoke(true); 
+        }
     }
     //------------Mouse3D--------------
     private void MouseMovement(Vector2 lookInput)
@@ -129,7 +163,7 @@ public class LaraCroftMovement : MonoBehaviour
         movement.y = LaraRigidbody.velocity.y;
         LaraRigidbody.velocity = movement;
     }
-
+    //-----RAYCAST-----
     private void CheckGroundStatus()
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);

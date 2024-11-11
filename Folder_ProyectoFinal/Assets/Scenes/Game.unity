@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.14882877, g: 0.2885874, b: 0.3623182, a: 1}
+  m_IndirectSpecularColor: {r: 0.111227185, g: 0.2054848, b: 0.33901164, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -750,11 +750,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14dd2cf5c58a9064e900a397acfe479d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LaraWalk: 2
+  LaraWalk: 3
   LaraRun: 6
+  LaraIsRunning: 0
   mouseSensitivity: 20
   cameraTransform: {fileID: 330585546}
   LarajumpForce: 6
+  isJumping: 0
+  isWalking: 0
   isGrounded: 0
   groundCheck: {fileID: 658495797}
   groundDistance: 1
@@ -1316,7 +1319,19 @@ MonoBehaviour:
     m_ActionId: cbb15843-b68d-4252-a1a5-ec18d37de98d
     m_ActionName: Gameplay/PlayerRunning[/Keyboard/leftShift]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1034664499}
+        m_TargetAssemblyTypeName: LaraCroftInputReader, Assembly-CSharp
+        m_MethodName: ReadCrouch
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: cf2f8f4d-0717-4f63-9daa-cc249d720a97
     m_ActionName: Gameplay/PlayerCrouched[/Keyboard/ctrl]
   - m_PersistentCalls:
