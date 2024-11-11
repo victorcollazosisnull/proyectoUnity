@@ -141,7 +141,7 @@ public class LaraCroftMovement : MonoBehaviour
         else if (LaraisCrouching)
         {
             LaraisCrouching = false;
-            OnStandUpAnimation?.Invoke(); 
+            OnStandUpAnimation?.Invoke();
             OnCrouchAnimation?.Invoke(false); 
         }
         else
