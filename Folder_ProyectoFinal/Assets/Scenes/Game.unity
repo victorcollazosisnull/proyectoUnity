@@ -1886,7 +1886,7 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 206281474}
+      - m_Target: {fileID: 1034664502}
         m_TargetAssemblyTypeName: LaraCroftInputReader, Assembly-CSharp
         m_MethodName: ReadDirection
         m_Mode: 0
@@ -1902,7 +1902,7 @@ MonoBehaviour:
     m_ActionName: Gameplay/PlayerWalk[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 206281474}
+      - m_Target: {fileID: 1034664502}
         m_TargetAssemblyTypeName: LaraCroftInputReader, Assembly-CSharp
         m_MethodName: ReadMouseInput
         m_Mode: 0
@@ -1918,7 +1918,7 @@ MonoBehaviour:
     m_ActionName: Gameplay/PlayerMovementCamera[/Mouse/delta]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 206281474}
+      - m_Target: {fileID: 1034664502}
         m_TargetAssemblyTypeName: LaraCroftInputReader, Assembly-CSharp
         m_MethodName: ReadJump
         m_Mode: 0
@@ -1934,7 +1934,7 @@ MonoBehaviour:
     m_ActionName: Gameplay/PlayerJump[/Keyboard/space]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 206281474}
+      - m_Target: {fileID: 1034664502}
         m_TargetAssemblyTypeName: LaraCroftInputReader, Assembly-CSharp
         m_MethodName: ReadRun
         m_Mode: 0
@@ -1950,7 +1950,7 @@ MonoBehaviour:
     m_ActionName: Gameplay/PlayerRunning[/Keyboard/leftShift]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 206281474}
+      - m_Target: {fileID: 1034664502}
         m_TargetAssemblyTypeName: LaraCroftInputReader, Assembly-CSharp
         m_MethodName: ReadCrouch
         m_Mode: 0
