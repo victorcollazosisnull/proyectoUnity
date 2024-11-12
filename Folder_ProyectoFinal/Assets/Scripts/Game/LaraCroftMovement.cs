@@ -34,7 +34,6 @@ public class LaraCroftMovement : MonoBehaviour
     public event Action<bool> OnRunningAnimation;
     public event Action<bool> OnCrouchAnimation; 
     public event Action<bool> OnCrouchWalkingAnimation;
-    public event Action OnStandUpAnimation;
 
     [Header("Raycast Detection Floor")]
     [SerializeField] private bool isJumping = false;
@@ -141,7 +140,6 @@ public class LaraCroftMovement : MonoBehaviour
         else if (LaraisCrouching)
         {
             LaraisCrouching = false;
-            OnStandUpAnimation?.Invoke();
             OnCrouchAnimation?.Invoke(false); 
         }
         else

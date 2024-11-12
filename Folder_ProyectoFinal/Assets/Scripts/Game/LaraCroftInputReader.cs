@@ -11,7 +11,7 @@ public class LaraCroftInputReader : MonoBehaviour
     public event Action<Vector2> OnMouseInput;
     public event Action OnCrouchInput;
     public event Action<bool> OnAimInput;
-
+    public event Action<float> OnMouseWheelInput;
     public void ReadDirection(InputAction.CallbackContext context)
     {
         Vector2 input = context.ReadValue<Vector2>();
@@ -31,9 +31,9 @@ public class LaraCroftInputReader : MonoBehaviour
     }
     public void ReadCrouch(InputAction.CallbackContext context)
     {
-        if (context.performed) 
+        if (context.performed)
         {
-            OnCrouchInput?.Invoke(); 
+            OnCrouchInput?.Invoke();
         }
     }
     public void ReadMouseInput(InputAction.CallbackContext context)
@@ -44,6 +44,11 @@ public class LaraCroftInputReader : MonoBehaviour
     public void ReadAim(InputAction.CallbackContext context)
     {
         bool isAiming = context.performed;
-        OnAimInput?.Invoke(isAiming); 
+        OnAimInput?.Invoke(isAiming);
+    }
+    public void ReadMouseWheel(InputAction.CallbackContext context)
+    {
+        float scrollInput = context.ReadValue<Vector2>().y;
+        OnMouseWheelInput?.Invoke(scrollInput);
     }
 }
