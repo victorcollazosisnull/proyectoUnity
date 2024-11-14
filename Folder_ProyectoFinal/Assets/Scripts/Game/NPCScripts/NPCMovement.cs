@@ -6,9 +6,14 @@ public class NPCMovement : MonoBehaviour
     public float npcSpeed;
     public SimpleLinkedList<NodoControl> allNodes;
     private NodoControl currentNode;
+    public bool isInteracting = false;
 
     private void Update()
     {
+        if (isInteracting)
+        {
+            return;
+        }
         transform.position = Vector3.MoveTowards(transform.position, positionToMove, npcSpeed * Time.deltaTime);
 
         Vector3 direction = positionToMove - transform.position;
@@ -37,11 +42,20 @@ public class NPCMovement : MonoBehaviour
 
     private void MoveToNextNode()
     {
-        AdjacentNodeInfo nextNodeInfo = currentNode.GetRandomAdjacentNode();
-        if (nextNodeInfo != null)
+        AdjacentNodeInfo nextNode = currentNode.GetRandomAdjacentNode();
+        if (nextNode != null)
         {
-            SetNewPosition(nextNodeInfo.node.transform.position);
-            currentNode = nextNodeInfo.node; 
+            SetNewPosition(nextNode.node.transform.position);
+            currentNode = nextNode.node; 
         }
+    }
+    public void StopPatrol()
+    {
+        isInteracting = true;
+    }
+
+    public void ResumePatrol()
+    {
+        isInteracting = false;
     }
 }

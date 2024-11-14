@@ -11,7 +11,7 @@ public class NodoControl : MonoBehaviour
 
     public void SetRandomAdjacentNodes(SimpleLinkedList<NodoControl> allNodes)
     {
-        int numberOfConnections = Random.Range(1, 3); 
+        int numberOfConnections = Random.Range(1, 4); 
 
         for (int i = 0; i < numberOfConnections; i++)
         {
