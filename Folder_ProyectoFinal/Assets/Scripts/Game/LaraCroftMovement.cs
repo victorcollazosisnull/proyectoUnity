@@ -1,3 +1,4 @@
+using Cinemachine;
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -46,6 +47,10 @@ public class LaraCroftMovement : MonoBehaviour
     [Header("Lara Croft Sounds")]
     private bool isRunning = false;
     private bool isMoving = false;
+
+    [Header("Lara Croft Cameras")]
+    [SerializeField] private CinemachineVirtualCamera mainCamera;
+    [SerializeField] private CinemachineVirtualCamera aimCamera;
     void Awake()
     {
         LaraRigidbody = GetComponent<Rigidbody>();
@@ -67,6 +72,7 @@ public class LaraCroftMovement : MonoBehaviour
         inputReader.OnMouseInput += MouseMovement;
         inputReader.OnCrouchInput += Crouch;
         inputReader.OnAimInput += HandleAimInput;
+        inputReader.OnAimInput += CamarasAimInput;
     }
 
     private void OnDisable() 
@@ -77,6 +83,7 @@ public class LaraCroftMovement : MonoBehaviour
         inputReader.OnMouseInput -= MouseMovement;
         inputReader.OnCrouchInput -= Crouch;
         inputReader.OnAimInput -= HandleAimInput;
+        inputReader.OnAimInput -= CamarasAimInput;
     }
     //------------Movement3D--------------
     private void Movement(Vector2 input)
@@ -203,6 +210,20 @@ public class LaraCroftMovement : MonoBehaviour
         {
             isJumping = false;
             OnJumpingAnimation?.Invoke(); 
+        }
+    }
+
+    private void CamarasAimInput(bool isAiming)
+    {
+        if (isAiming)
+        {
+            mainCamera.Priority = 1;
+            aimCamera.Priority = 2;
+        }
+        else
+        {
+            mainCamera.Priority = 2;
+            aimCamera.Priority = 1;
         }
     }
 }
