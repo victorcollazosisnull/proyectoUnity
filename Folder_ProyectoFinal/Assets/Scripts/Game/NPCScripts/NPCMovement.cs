@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class NPCMovement : MonoBehaviour
 {
+    [Header("NPC Movement")]
     public Vector3 positionToMove;
     public float npcSpeed;
     public SimpleLinkedList<NodoControl> allNodes;

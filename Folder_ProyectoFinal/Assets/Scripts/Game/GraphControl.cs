@@ -7,7 +7,7 @@ public class GraphControl : MonoBehaviour
 
     public GameObject player; 
     public NPCMovement npc;
-
+    public EnemyPatrol enemy;
     private void Awake()
     {
         AllNodes = new SimpleLinkedList<NodoControl>();
@@ -22,6 +22,7 @@ public class GraphControl : MonoBehaviour
 
         ConnectNodes();
         SetInitialNode();
+        SetInitialNodeForEnemy();
     }
 
     void ConnectNodes()
@@ -39,5 +40,12 @@ public class GraphControl : MonoBehaviour
         NodoControl targetNode = AllNodes.Get(position);
         npc.SetInitialNode(targetNode); 
         npc.SetNewPosition(targetNode.transform.position);
+    }
+    void SetInitialNodeForEnemy()
+    {
+        int position = Random.Range(0, AllNodes.Count());
+        NodoControl targetNode = AllNodes.Get(position);
+        enemy.SetInitialNode(targetNode);
+        enemy.SetNewPosition(targetNode.transform.position);
     }
 }
