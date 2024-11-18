@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using System.Threading;
 
 public class PanelOptionsController : MonoBehaviour
 {
@@ -27,6 +28,14 @@ public class PanelOptionsController : MonoBehaviour
     private static float currentMusicVolume = 0.6f;
     private static float currentSFXVolume = 0.6f;
 
+    [Header("Buttons for Mute and Unmute")]
+    public Button muteMasterButton;
+    public Button unmuteMasterButton;
+    public Button muteMusicButton;
+    public Button unmuteMusicButton;
+    public Button muteSFXButton;
+    public Button unmuteSFXButton;
+
     void Start()
     {
         optionsPanel.anchoredPosition = hiddenPosition;
@@ -42,7 +51,31 @@ public class PanelOptionsController : MonoBehaviour
         masterSlider.onValueChanged.AddListener(SetMasterVolume);
         musicSlider.onValueChanged.AddListener(SetMusicVolume);
         sfxSlider.onValueChanged.AddListener(SetSFXVolume);
+
+        unmuteMasterButton.gameObject.SetActive(false);
+        unmuteMusicButton.gameObject.SetActive(false);
+        unmuteSFXButton.gameObject.SetActive(false);
     }
+    private void OnEnable()
+    {
+        AudioManager.OnMasterMute += MasterMute;
+        AudioManager.OnMasterUnmute += MasterUnmute;
+        AudioManager.OnMusicMute += MusicMute;
+        AudioManager.OnMusicUnmute += MusicUnmute;
+        AudioManager.OnSFXMute += SFXMute;
+        AudioManager.OnSFXUnmute += SFXUnmute;
+    }
+
+    private void OnDisable()
+    {
+        AudioManager.OnMasterMute -= MasterMute;
+        AudioManager.OnMasterUnmute -= MasterUnmute;
+        AudioManager.OnMusicMute -= MusicMute;
+        AudioManager.OnMusicUnmute -= MusicUnmute;
+        AudioManager.OnSFXMute -= SFXMute;
+        AudioManager.OnSFXUnmute -= SFXUnmute;
+    }
+
 
     public void ShowPanelOptions()
     {
@@ -84,7 +117,70 @@ public class PanelOptionsController : MonoBehaviour
         currentSFXVolume = volume;
         AudioManager.instance.SetSFXVolume(volume);
     }
+    private void MasterMute()
+    {
+        ToggleButtons(muteMasterButton, unmuteMasterButton);
+    }
 
+    private void MasterUnmute()
+    {
+        ToggleButtons(unmuteMasterButton, muteMasterButton);
+    }
+
+    private void MusicMute()
+    {
+        ToggleButtons(muteMusicButton, unmuteMusicButton);
+    }
+
+    private void MusicUnmute()
+    {
+        ToggleButtons(unmuteMusicButton, muteMusicButton);
+    }
+
+    private void SFXMute()
+    {
+        ToggleButtons(muteSFXButton, unmuteSFXButton);
+    }
+
+    private void SFXUnmute()
+    {
+        ToggleButtons(unmuteSFXButton, muteSFXButton);
+    }
+
+    private void ToggleButtons(Button toHide, Button toShow)
+    {
+        toHide.gameObject.SetActive(false); 
+        toShow.gameObject.SetActive(true); 
+    }
+    public void OnMuteMasterPressed()
+    {
+        AudioManager.instance.MuteMasterVolume();
+    }
+
+    public void OnUnmuteMasterPressed()
+    {
+        AudioManager.instance.UnmuteMasterVolume();
+    }
+
+    public void OnMuteMusicPressed()
+    {
+        AudioManager.instance.MuteMusicVolume();
+    }
+
+    public void OnUnmuteMusicPressed()
+    {
+        AudioManager.instance.UnmuteMusicVolume();
+    }
+
+    public void OnMuteSFXPressed()
+    {
+        AudioManager.instance.MuteSFXVolume();
+    }
+
+    public void OnUnmuteSFXPressed()
+    {
+        AudioManager.instance.UnmuteSFXVolume();
+    }
     private void OnDestroy()
     {
         brightnessSlider.onValueChanged.RemoveListener(SetBrightness);
