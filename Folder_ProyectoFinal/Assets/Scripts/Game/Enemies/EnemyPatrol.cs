@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class EnemyPatrol : MonoBehaviour
 {
+    [Header("Enem Movement")]
     public Vector3 positionToMove;
     public float enemieSpeed;
     public SimpleLinkedList<NodoControl> allNodes;
@@ -12,6 +13,17 @@ public class EnemyPatrol : MonoBehaviour
     public Transform player;
     private bool isChasing = false;
 
+    private void Start()
+    {
+        if (currentNode == null)
+        {
+            Debug.LogError("no hay nodo");
+        }
+        else
+        {
+            MoveToNextNode();
+        }
+    }
     private void Update()
     {
         if (isInteracting)
@@ -42,9 +54,16 @@ public class EnemyPatrol : MonoBehaviour
         }
     }
 
-    public void SetInitialNode(NodoControl initialNode)
+    public void SetInitialNodeEnemie(NodoControl initialNode)
     {
-        currentNode = initialNode;
+        if (initialNode != null)
+        {
+            currentNode = initialNode;
+        }
+        else
+        {
+            Debug.LogError("nodo inicial null");
+        }
     }
 
     public void SetNewPosition(Vector3 newPosition)
@@ -54,11 +73,14 @@ public class EnemyPatrol : MonoBehaviour
 
     private void MoveToNextNode()
     {
-        AdjacentNodeInfo nextNode = currentNode.GetRandomAdjacentNode();
-        if (nextNode != null)
+        if (currentNode != null)
         {
-            SetNewPosition(nextNode.node.transform.position);
-            currentNode = nextNode.node;
+            AdjacentNodeInfo nextNode = currentNode.GetRandomAdjacentNode();
+            if (nextNode != null)
+            {
+                SetNewPosition(nextNode.node.transform.position);
+                currentNode = nextNode.node;
+            }
         }
     }
 

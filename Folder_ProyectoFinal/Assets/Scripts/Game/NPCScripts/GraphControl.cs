@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class GraphControl : MonoBehaviour
 {
-    public NodoControl[] nodesArray; 
-    public SimpleLinkedList<NodoControl> AllNodes; 
+    public NodoControl[] nodesArray;
+    public SimpleLinkedList<NodoControl> AllNodes;
 
-    public GameObject player; 
+    public GameObject player;
     public NPCMovement npc;
     public EnemyPatrol enemy;
     private void Awake()
@@ -30,7 +30,7 @@ public class GraphControl : MonoBehaviour
         for (int i = 0; i < AllNodes.Count(); i++)
         {
             NodoControl node = AllNodes.Get(i);
-            node.SetRandomAdjacentNodes(AllNodes); 
+            node.SetRandomAdjacentNodes(AllNodes);
         }
     }
 
@@ -38,14 +38,25 @@ public class GraphControl : MonoBehaviour
     {
         int position = Random.Range(0, AllNodes.Count());
         NodoControl targetNode = AllNodes.Get(position);
-        npc.SetInitialNode(targetNode); 
-        npc.SetNewPosition(targetNode.transform.position);
+
+        if (targetNode != null)
+        {
+            npc.SetInitialNode(targetNode);
+            npc.SetNewPosition(targetNode.transform.position);
+        }
     }
     void SetInitialNodeForEnemy()
     {
-        int position = Random.Range(0, AllNodes.Count());
-        NodoControl targetNode = AllNodes.Get(position);
-        enemy.SetInitialNode(targetNode);
-        enemy.SetNewPosition(targetNode.transform.position);
+        if (AllNodes.Count() > 0)
+        {
+            int position = Random.Range(0, AllNodes.Count());
+            NodoControl targetNode = AllNodes.Get(position);
+
+            if (targetNode != null)
+            {
+                enemy.SetInitialNodeEnemie(targetNode);
+                enemy.SetNewPosition(targetNode.transform.position);
+            }
+        }
     }
 }

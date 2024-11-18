@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class EnemieInteraction : MonoBehaviour
 {
-    public float interactionRadius = 3f;
+    public float interactionRadius = 1f;
     public Transform player;
     public EnemyPatrol enemyMovement;
     private bool playerClose = false;

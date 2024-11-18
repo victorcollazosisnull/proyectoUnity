@@ -1,16 +1,16 @@
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class PanelOptionsController : MonoBehaviour
 {
     public static bool isGamePaused = false;
+
     [Header("Panel Options Movement")]
     public RectTransform optionsPanel;
     public Vector2 hiddenPosition = new Vector2(-2000f, 0f);
     public Vector2 visiblePosition = Vector2.zero;
-    public float smoothTime = 0.3f;
-
-    private Vector2 velocity = Vector2.zero;
+    public float moveDuration = 0.5f; 
     private bool isOptionsVisible = false;
 
     [Header("Brightness Settings")]
@@ -44,21 +44,24 @@ public class PanelOptionsController : MonoBehaviour
         sfxSlider.onValueChanged.AddListener(SetSFXVolume);
     }
 
-    void Update()
-    {
-        Vector2 targetPosition = isOptionsVisible ? visiblePosition : hiddenPosition;
-        optionsPanel.anchoredPosition = Vector2.SmoothDamp(optionsPanel.anchoredPosition, targetPosition, ref velocity, smoothTime, Mathf.Infinity, Time.unscaledDeltaTime);
-    }
-
     public void ShowPanelOptions()
     {
-        optionsPanel.SetAsLastSibling();
         isOptionsVisible = !isOptionsVisible;
+
+        if (isOptionsVisible)
+        {
+            optionsPanel.DOAnchorPos(visiblePosition, moveDuration).SetEase(Ease.OutCubic);
+            optionsPanel.SetAsLastSibling();
+        }
+        else
+        {
+            optionsPanel.DOAnchorPos(hiddenPosition, moveDuration).SetEase(Ease.InCubic);
+        }
     }
 
     private void SetBrightness(float brillo)
     {
-        currentBrillo = brillo; 
+        currentBrillo = brillo;
         Color color = brightness.color;
         color.a = 1f - brillo;
         brightness.color = color;
@@ -66,19 +69,19 @@ public class PanelOptionsController : MonoBehaviour
 
     private void SetMasterVolume(float volume)
     {
-        currentMasterVolume = volume; 
+        currentMasterVolume = volume;
         AudioManager.instance.SetMasterVolume(volume);
     }
 
     private void SetMusicVolume(float volume)
     {
-        currentMusicVolume = volume; 
+        currentMusicVolume = volume;
         AudioManager.instance.SetMusicVolume(volume);
     }
 
     private void SetSFXVolume(float volume)
     {
-        currentSFXVolume = volume; 
+        currentSFXVolume = volume;
         AudioManager.instance.SetSFXVolume(volume);
     }
 

@@ -1,15 +1,30 @@
 using UnityEngine;
 using UnityEngine.UIElements;
+using DG.Tweening;
 
 public class ItemsController : MonoBehaviour
 {
     public Sprite itemSprite;
-    public float rotationSpeed = 50f;
-    void Update()
+    public float scaleLenght = 0.2f;   
+    public float scaleDuration = 1f;  
+
+    private Vector3 originalScale;  
+
+    void Start()
     {
-        Quaternion rotation = Quaternion.Euler(0f, 0f, rotationSpeed * Time.deltaTime);
-        transform.rotation = transform.rotation * rotation;
+        originalScale = transform.localScale;
+
+        ScaleItem();
     }
+
+    void ScaleItem()
+    {
+        Vector3 targetScale = originalScale + new Vector3(scaleLenght, scaleLenght, scaleLenght);
+        transform.DOScale(targetScale, scaleDuration)
+                 .SetLoops(-1, LoopType.Yoyo)  
+                 .SetEase(Ease.InOutSine);  
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -19,7 +34,7 @@ public class ItemsController : MonoBehaviour
             {
                 playerInventory.AddImageToBox(itemSprite);
             }
-            Destroy(gameObject); 
+            Destroy(gameObject);
         }
     }
 }

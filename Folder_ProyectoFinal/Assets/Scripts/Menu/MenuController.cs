@@ -9,4 +9,8 @@ public class MenuController : MonoBehaviour
         MusicManager.Instance.StopAllMusic();
         MusicManager.Instance.PlayGameMusic();
     }
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
 }
