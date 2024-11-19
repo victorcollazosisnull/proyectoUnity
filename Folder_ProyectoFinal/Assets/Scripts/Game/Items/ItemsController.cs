@@ -4,25 +4,25 @@ using DG.Tweening;
 
 public class ItemsController : MonoBehaviour
 {
-    public Sprite itemSprite;
-    public float scaleLenght = 0.2f;   
-    public float scaleDuration = 1f;  
+    [SerializeField] private AnimationCurve scaleCurve; 
+    [SerializeField] private float scaleDuration = 1f;  
+    public Sprite itemSprite;                           
 
-    private Vector3 originalScale;  
+    private float elapsedTime = 0f;                  
+    private Vector3 originalScale;               
 
     void Start()
     {
         originalScale = transform.localScale;
-
-        ScaleItem();
     }
 
-    void ScaleItem()
+    void Update()
     {
-        Vector3 targetScale = originalScale + new Vector3(scaleLenght, scaleLenght, scaleLenght);
-        transform.DOScale(targetScale, scaleDuration)
-                 .SetLoops(-1, LoopType.Yoyo)  
-                 .SetEase(Ease.InOutSine);  
+        elapsedTime += Time.deltaTime;
+        float normalizedTime = (elapsedTime % scaleDuration) / scaleDuration;
+
+        float curveValue = scaleCurve.Evaluate(normalizedTime);
+        transform.localScale = originalScale * (1f + curveValue);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -34,6 +34,7 @@ public class ItemsController : MonoBehaviour
             {
                 playerInventory.AddImageToBox(itemSprite);
             }
+
             Destroy(gameObject);
         }
     }
