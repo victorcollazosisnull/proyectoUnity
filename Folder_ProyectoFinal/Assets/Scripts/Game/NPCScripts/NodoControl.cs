@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class NodoControl : MonoBehaviour
 {
-    public SimpleLinkedList<AdjacentNodeInfo> adjacentNodes;
+    public SimpleLinkedList<AdjacentNodeInfo> adjacentNodes; 
 
     private void Awake()
     {
@@ -11,14 +11,14 @@ public class NodoControl : MonoBehaviour
 
     public void SetRandomAdjacentNodes(SimpleLinkedList<NodoControl> allNodes)
     {
-        int numberOfConnections = Random.Range(1, 4);
+        int numberOfConnections = Random.Range(1, 3);
 
         for (int i = 0; i < numberOfConnections; i++)
         {
             NodoControl randomNode = allNodes.Get(Random.Range(0, allNodes.Count()));
             if (randomNode != this)
             {
-                AddAdjacentNode(randomNode, Random.Range(1f, 5f));
+                AddAdjacentNode(randomNode, Random.Range(1f, 4f));
             }
         }
     }

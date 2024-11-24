@@ -37,6 +37,24 @@ public class DoubleCircularLinkedList<T>
         }
         Count = Count + 1;
     }
+    public Node GetAtIndex(int index)
+    {
+        if (index < 0 || index >= Count) 
+        {
+            throw new IndexOutOfRangeException("Índice fuera de rango.");
+        }
+
+        Node currentNode = Head;
+        int i = 0;
+
+        while (i < index)
+        {
+            currentNode = currentNode.Next;
+            i++;
+        }
+
+        return currentNode;
+    }
     public void InsertAtEnd(T value)
     {
         if (Head == null)

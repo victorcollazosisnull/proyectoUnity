@@ -2,68 +2,34 @@ using UnityEngine;
 
 public class EnemyPatrol : MonoBehaviour
 {
-    [Header("Enem Movement")]
-    public Vector3 positionToMove;
-    public float enemieSpeed;
+    [Header("Enemy Settings")]
+    public float patrolSpeed = 2f;
+    public float detectionRadius = 5f;
+    public float stopChaseRadius = 7f;
+    public Transform player;
+
+    [Header("Enemy Patrol")]
     public SimpleLinkedList<NodoControl> allNodes;
     private NodoControl currentNode;
-    public bool isInteracting = false;
-
-    public float detectionRadius = 5f; 
-    public Transform player;
+    private Vector3 positionToMove;
     private bool isChasing = false;
 
-    private void Start()
-    {
-        if (currentNode == null)
-        {
-            Debug.LogError("no hay nodo");
-        }
-        else
-        {
-            MoveToNextNode();
-        }
-    }
     private void Update()
     {
-        if (isInteracting)
-        {
-            return;
-        }
-
         if (isChasing)
         {
-            positionToMove = player.position; 
+            ChasePlayer();
         }
         else
         {
-            transform.position = Vector3.MoveTowards(transform.position, positionToMove, enemieSpeed * Time.deltaTime);
-        }
-
-        Vector3 direction = positionToMove - transform.position;
-        direction.y = 0;
-        if (direction.sqrMagnitude > 0.1f)
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
-        }
-
-        if (Vector3.Distance(transform.position, positionToMove) < 0.2f)
-        {
-            MoveToNextNode();
+            Patrol();
         }
     }
 
-    public void SetInitialNodeEnemie(NodoControl initialNode)
+    public void SetInitialNode(NodoControl initialNode)
     {
-        if (initialNode != null)
-        {
-            currentNode = initialNode;
-        }
-        else
-        {
-            Debug.LogError("nodo inicial null");
-        }
+        currentNode = initialNode;
+        SetNewPosition(initialNode.transform.position);
     }
 
     public void SetNewPosition(Vector3 newPosition)
@@ -71,37 +37,64 @@ public class EnemyPatrol : MonoBehaviour
         positionToMove = newPosition;
     }
 
+    private void Patrol()
+    {
+        Vector3 targetPosition = new Vector3(positionToMove.x, transform.position.y, positionToMove.z);
+        transform.position = Vector3.MoveTowards(transform.position, targetPosition, patrolSpeed * Time.deltaTime);
+
+        LookAtMoveDirection(positionToMove);
+
+        if (Vector3.Distance(transform.position, positionToMove) < 0.2f)
+        {
+            MoveToNextNode();
+        }
+
+        CheckPlayerDistance();
+    }
+
     private void MoveToNextNode()
     {
-        if (currentNode != null)
+        AdjacentNodeInfo nextNode = currentNode.GetRandomAdjacentNode();
+        if (nextNode != null)
         {
-            AdjacentNodeInfo nextNode = currentNode.GetRandomAdjacentNode();
-            if (nextNode != null)
-            {
-                SetNewPosition(nextNode.node.transform.position);
-                currentNode = nextNode.node;
-            }
+            SetNewPosition(nextNode.node.transform.position);
+            currentNode = nextNode.node;
         }
     }
 
-    public void StopPatrol()
+    private void CheckPlayerDistance()
     {
-        isInteracting = true;
+        if (Vector3.Distance(transform.position, player.position) <= detectionRadius)
+        {
+            isChasing = true;
+        }
+        if (Vector3.Distance(transform.position, player.position) > stopChaseRadius)
+        {
+            isChasing = false;
+            SetNewPosition(currentNode.transform.position);
+        }
     }
 
-    public void ResumePatrol()
+    private void ChasePlayer()
     {
-        isInteracting = false;
+        Vector3 directionToPlayer = new Vector3(player.position.x, transform.position.y, player.position.z) - transform.position;
+        transform.position = Vector3.MoveTowards(transform.position, player.position, patrolSpeed * Time.deltaTime);  
+        LookAtMoveDirection(player.position);
+
+        if (Vector3.Distance(transform.position, player.position) > stopChaseRadius)
+        {
+            isChasing = false;
+            SetNewPosition(currentNode.transform.position);
+        }
     }
 
-    public void StartChasing()
+    private void LookAtMoveDirection(Vector3 targetPosition)
     {
-        isChasing = true; 
-    }
-
-    public void StopChasing()
-    {
-        isChasing = false; 
-        MoveToNextNode();
+        Vector3 direction = (targetPosition - transform.position).normalized;
+        if (direction != Vector3.zero)
+        {
+            Quaternion lookRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f); 
+        }
     }
 }

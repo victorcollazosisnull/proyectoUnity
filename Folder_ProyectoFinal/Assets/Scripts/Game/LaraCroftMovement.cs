@@ -60,8 +60,8 @@ public class LaraCroftMovement : MonoBehaviour
 
     private void Start() 
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        //Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.visible = false;
     }
     //------------Sub Input Reader--------------
     private void OnEnable() 

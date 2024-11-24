@@ -13,12 +13,12 @@ public class EnemieInteraction : MonoBehaviour
         {
             if (Vector3.Distance(transform.position, player.position) < interactionRadius)
             {
-                enemyMovement.StartChasing(); 
+               // enemyMovement.StartChasing(); 
             }
         }
         else
         {
-            enemyMovement.StopChasing(); 
+           // enemyMovement.StopChasing(); 
         }
     }
 
