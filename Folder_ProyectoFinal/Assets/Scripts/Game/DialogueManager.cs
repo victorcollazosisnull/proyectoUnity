@@ -5,34 +5,46 @@ public class DialogueManager : MonoBehaviour
 {
     [SerializeField] private GameObject dialogueUI;
     [SerializeField] private TextMeshProUGUI dialogueText;
-    [SerializeField] private TextMeshProUGUI leftOptionText;
-    [SerializeField] private TextMeshProUGUI rightOptionText;
-    [SerializeField] private GameObject nextButton; 
-    [SerializeField] private GameObject optionsPanel; 
+    [SerializeField] private TextMeshProUGUI noOption;
+    [SerializeField] private TextMeshProUGUI yesOption;
+    [SerializeField] private GameObject nextOption; 
+    [SerializeField] private GameObject panelYesOrNo; 
+    [SerializeField] private GameObject finishDialogue; 
 
     private DoubleCircularLinkedList<DialogueNode> dialogueNodes = new DoubleCircularLinkedList<DialogueNode>();
     private DoubleCircularLinkedList<DialogueNode>.Node currentNode;
     public event Action OnDialogueEnded;
 
+    public NPCMovement npcMovement;
+
     public void EndDialogue()
     {
         dialogueUI.SetActive(false);
-        Debug.Log("Dialogo terminado");
+        Debug.Log("Diálogo terminado.");
         OnDialogueEnded?.Invoke();
+
+        if (npcMovement != null)
+        {
+            npcMovement.ResumePatrol();
+        }
     }
 
     public void StartDialogue(DoubleCircularLinkedList<DialogueNode> nodes)
     {
         if (nodes == null || nodes.Count == 0)
         {
-            Debug.LogError("vacía");
+            Debug.LogError("Lista de diálogos vacía.");
             dialogueUI.SetActive(false);
             return;
         }
-
         dialogueNodes = nodes;
         currentNode = dialogueNodes.Head;
         ShowCurrentDialogue();
+    }
+
+    public void OnCloseButtonClicked()
+    {
+        EndDialogue();
     }
 
     private void ShowCurrentDialogue()
@@ -48,27 +60,34 @@ public class DialogueManager : MonoBehaviour
 
         if (currentNode.Value.HasOptions)
         {
-            nextButton.SetActive(false);  
-            optionsPanel.SetActive(true); 
-            leftOptionText.text = currentNode.Value.noOption;
-            rightOptionText.text = currentNode.Value.yesOption;
+            nextOption.SetActive(false); 
+            panelYesOrNo.SetActive(true); 
+            noOption.text = currentNode.Value.noOption;
+            yesOption.text = currentNode.Value.yesOption;
+            finishDialogue.SetActive(false);
         }
         else
         {
-            nextButton.SetActive(true);   
-            optionsPanel.SetActive(false); 
+            nextOption.SetActive(true); 
+            panelYesOrNo.SetActive(false);
+            finishDialogue.SetActive(true);
         }
     }
 
     public void OnNextSelected()
     {
+        if (!currentNode.Value.HasOptions)
+        {
+            return;
+        }
         AdvanceDialogue();
+
     }
 
     public void OnLeftOptionSelected()
     {
-        HandleChoice(true);  
-    }
+        HandleChoice(true);
+    } 
 
     public void OnRightOptionSelected()
     {
@@ -77,34 +96,24 @@ public class DialogueManager : MonoBehaviour
 
     private void HandleChoice(bool accepted)
     {
-        string nextText = accepted ? "Ok aquí vamos." : "Para la próxima.";
-        currentNode = currentNode.Next; 
+        string result = accepted ? "Ok gogogo" : "Pa la próxima.";
+        dialogueText.text = result;
 
-        if (currentNode != null)
-        {
-            currentNode.Value.Text = nextText; 
-            ShowCurrentDialogue();
-
-            optionsPanel.SetActive(false); 
-            nextButton.SetActive(true);   
-        }
-        else
-        {
-            EndDialogue(); 
-        }
+        AdvanceDialogue();
     }
 
     private void AdvanceDialogue()
     {
-        currentNode = currentNode.Next;
-
-        if (currentNode == null || currentNode.Value == null || currentNode == dialogueNodes.Head)
+        if (currentNode.Next == null || currentNode.Next == dialogueNodes.Head)
         {
             EndDialogue();
+            Debug.Log("Fin del diálogo.");
         }
         else
         {
+            currentNode = currentNode.Next;
             ShowCurrentDialogue();
+            Debug.Log("Avanzando al siguiente nodo.");
         }
     }
 }
