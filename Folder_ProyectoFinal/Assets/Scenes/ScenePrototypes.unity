@@ -154,7 +154,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: ff87f33f95953484484035adb2123f02,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.802
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ff87f33f95953484484035adb2123f02,
         type: 3}
@@ -856,7 +856,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0.10888738, y: -0.011021846, z: 0.0012074012, w: 0.99399227}
-  m_LocalPosition: {x: 0.19640975, y: 1.5630565, z: -2.0703797}
+  m_LocalPosition: {x: 0.19640975, y: 2.3650556, z: -2.0703797}
   m_LocalScale: {x: 0.7436699, y: 0.7436699, z: 0.74367}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2058,8 +2058,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14dd2cf5c58a9064e900a397acfe479d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LaraWalk: 3
-  LaraRun: 6
+  LaraWalk: 4
+  LaraRun: 6.5
   LaraIsRunning: 0
   mouseSensitivity: 20
   cameraTransform: {fileID: 717973981}
@@ -2638,7 +2638,7 @@ Transform:
   m_GameObject: {fileID: 717973980}
   serializedVersion: 2
   m_LocalRotation: {x: 0.10888738, y: -0.011021846, z: 0.0012074012, w: 0.99399227}
-  m_LocalPosition: {x: 19.2, y: 152.79631, z: -202.3896}
+  m_LocalPosition: {x: 19.2, y: 152.79622, z: -202.3896}
   m_LocalScale: {x: 97.75482, y: 97.75482, z: 97.754814}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5515,7 +5515,7 @@ Transform:
   m_GameObject: {fileID: 1440782964}
   serializedVersion: 2
   m_LocalRotation: {x: 0.12894905, y: -0.0041554016, z: 0.00053889176, w: 0.99164236}
-  m_LocalPosition: {x: 57.28433, y: 153.90935, z: -87.5081}
+  m_LocalPosition: {x: 57.28433, y: 153.90929, z: -87.5081}
   m_LocalScale: {x: 97.75484, y: 97.75484, z: 97.754814}
   m_ConstrainProportionsScale: 0
   m_Children:

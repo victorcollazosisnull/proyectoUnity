@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 9bc0d32b3cb4e2a429bdc4827cca4426
+guid: 0248370c41ae3e34d921823b19b3b56d
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -33,11 +33,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: LaraCroftJUMP
+      name: CROUCHIDLE
       takeName: mixamo.com
       internalID: -203655887218126122
-      firstFrame: 14
-      lastFrame: 52
+      firstFrame: 0
+      lastFrame: 200
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -45,7 +45,7 @@ ModelImporter:
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 1
-      loopBlend: 0
+      loopBlend: 1
       loopBlendOrientation: 1
       loopBlendPositionY: 1
       loopBlendPositionXZ: 1

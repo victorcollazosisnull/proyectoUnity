@@ -1,3 +1,4 @@
+using System.Collections;
 using Cinemachine;
 using System;
 using UnityEngine;
@@ -60,8 +61,8 @@ public class LaraCroftMovement : MonoBehaviour
 
     private void Start() 
     {
-        //Cursor.lockState = CursorLockMode.Locked;
-        //Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
     //------------Sub Input Reader--------------
     private void OnEnable() 
@@ -121,10 +122,11 @@ public class LaraCroftMovement : MonoBehaviour
         {
             return;
         }
-        OnJumpingAnimation?.Invoke(); // Events JumpAnimation
+        OnJumpingAnimation?.Invoke();
         isJumping = true;
-        Jump();  
         isGrounded = false;
+        LaraAnimator.SetBool("isGrounded", false); 
+        LaraRigidbody.AddForce(Vector3.up * LarajumpForce, ForceMode.Impulse);
     }
     //------------Run3D--------------
     private void Running(bool isRunning)
@@ -204,15 +206,24 @@ public class LaraCroftMovement : MonoBehaviour
     //-----RAYCAST-----
     private void CheckGroundStatus()
     {
+        bool wasGrounded = isGrounded;
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
-        if (isGrounded && isJumping)
+        if (isGrounded && !wasGrounded) 
         {
-            isJumping = false;
-            OnJumpingAnimation?.Invoke(); 
+            LaraAnimator.SetBool("isGrounded", false);
+        }
+        else if (!isGrounded && wasGrounded) 
+        {
+            LaraAnimator.SetBool("isGrounded", true);
         }
     }
-
+    /*private IEnumerator PreventMultipleJumps()
+    {
+        isJumping = true;
+        yield return new WaitForSeconds(1f); 
+        isJumping = false;
+    }*/
     private void CamarasAimInput(bool isAiming)
     {
         if (isAiming)
