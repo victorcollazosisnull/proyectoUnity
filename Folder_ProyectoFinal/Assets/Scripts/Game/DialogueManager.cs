@@ -7,12 +7,12 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private TextMeshProUGUI noOption;
     [SerializeField] private TextMeshProUGUI yesOption;
-    [SerializeField] private GameObject nextOption; 
-    [SerializeField] private GameObject panelYesOrNo; 
-    [SerializeField] private GameObject finishDialogue; 
+    [SerializeField] private GameObject nextOption;
+    [SerializeField] private GameObject panelYesOrNo;
+    [SerializeField] private GameObject finishDialogue;
 
-    private DoubleCircularLinkedList<DialogueNode> dialogueNodes = new DoubleCircularLinkedList<DialogueNode>();
-    private DoubleCircularLinkedList<DialogueNode>.Node currentNode;
+    private DoubleCircularLinkedList<DialoguesNodes> dialogueNodes = new DoubleCircularLinkedList<DialoguesNodes>();
+    private DoubleCircularLinkedList<DialoguesNodes>.Node currentNode;
     public event Action OnDialogueEnded;
 
     public NPCMovement npcMovement;
@@ -29,7 +29,7 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
-    public void StartDialogue(DoubleCircularLinkedList<DialogueNode> nodes)
+    public void StartDialogue(DoubleCircularLinkedList<DialoguesNodes> nodes)
     {
         if (nodes == null || nodes.Count == 0)
         {
@@ -37,6 +37,7 @@ public class DialogueManager : MonoBehaviour
             dialogueUI.SetActive(false);
             return;
         }
+
         dialogueNodes = nodes;
         currentNode = dialogueNodes.Head;
         ShowCurrentDialogue();
@@ -60,15 +61,15 @@ public class DialogueManager : MonoBehaviour
 
         if (currentNode.Value.HasOptions)
         {
-            nextOption.SetActive(false); 
-            panelYesOrNo.SetActive(true); 
+            nextOption.SetActive(false);
+            panelYesOrNo.SetActive(true);
             noOption.text = currentNode.Value.noOption;
             yesOption.text = currentNode.Value.yesOption;
             finishDialogue.SetActive(false);
         }
         else
         {
-            nextOption.SetActive(true); 
+            nextOption.SetActive(true);
             panelYesOrNo.SetActive(false);
             finishDialogue.SetActive(true);
         }
@@ -76,29 +77,27 @@ public class DialogueManager : MonoBehaviour
 
     public void OnNextSelected()
     {
-        if (!currentNode.Value.HasOptions)
+        if (currentNode.Value.HasOptions)
         {
             return;
         }
         AdvanceDialogue();
-
     }
 
     public void OnLeftOptionSelected()
     {
         HandleChoice(true);
-    } 
+    }
 
     public void OnRightOptionSelected()
     {
-        HandleChoice(false); 
+        HandleChoice(false);
     }
 
     private void HandleChoice(bool accepted)
     {
-        string result = accepted ? "Ok gogogo" : "Pa la próxima.";
+        string result = accepted ? "Ok, ¡gogogo!" : "Para la próxima.";
         dialogueText.text = result;
-
         AdvanceDialogue();
     }
 
@@ -117,14 +116,14 @@ public class DialogueManager : MonoBehaviour
         }
     }
 }
-public class DialogueNode
+public class DialoguesNodes
 {
     public string Text { get; set; }
     public string noOption { get; set; } 
     public string yesOption { get; set; }
     public bool HasOptions { get; set; } 
 
-    public DialogueNode(string text, string leftOption = null, string rightOption = null, bool hasOptions = false)
+    public DialoguesNodes(string text, string leftOption = null, string rightOption = null, bool hasOptions = false)
     {
         Text = text;
         noOption = leftOption;

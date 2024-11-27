@@ -32,7 +32,7 @@ public class LaraCroftMovement : MonoBehaviour
     private bool LaraIsAiming = false;
     // Events Animations
     public event Action<bool> OnMovementAnimation;
-    public event Action OnJumpingAnimation;
+    public event Action<bool> OnJumpingAnimation;
     public event Action<bool> OnRunningAnimation;
     public event Action<bool> OnCrouchAnimation; 
     public event Action<bool> OnCrouchWalkingAnimation;
@@ -61,8 +61,8 @@ public class LaraCroftMovement : MonoBehaviour
 
     private void Start() 
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        //Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.visible = false;
     }
     //------------Sub Input Reader--------------
     private void OnEnable() 
@@ -98,22 +98,6 @@ public class LaraCroftMovement : MonoBehaviour
         OnCrouchWalkingAnimation?.Invoke(isCrouchWalking); // Events CrounchedAnimation
 
         isMoving = movementInput != Vector3.zero;
-
-        if (isMoving && isGrounded)
-        {
-            if (LaraIsRunning)
-            {
-                SFXManager.Instance.PlayRunningSound(); 
-            }
-            else
-            {
-                SFXManager.Instance.PlayWalkingSound(); 
-            }
-        }
-        else
-        {
-            SFXManager.Instance.StopFootstepsSound(); 
-        }
     }
     //------------Jump3D--------------
     private void Jumping()
@@ -122,10 +106,10 @@ public class LaraCroftMovement : MonoBehaviour
         {
             return;
         }
-        OnJumpingAnimation?.Invoke();
+        OnJumpingAnimation?.Invoke(true);
         isJumping = true;
         isGrounded = false;
-        LaraAnimator.SetBool("isGrounded", false); 
+        LaraAnimator.SetBool("LaraIsJumping", false); 
         LaraRigidbody.AddForce(Vector3.up * LarajumpForce, ForceMode.Impulse);
     }
     //------------Run3D--------------
@@ -211,19 +195,14 @@ public class LaraCroftMovement : MonoBehaviour
 
         if (isGrounded && !wasGrounded) 
         {
-            LaraAnimator.SetBool("isGrounded", false);
+            isJumping = false;
+            LaraAnimator.SetBool("LaraIsJumping", false);
         }
         else if (!isGrounded && wasGrounded) 
         {
-            LaraAnimator.SetBool("isGrounded", true);
+            LaraAnimator.SetBool("LaraIsJumping", true);
         }
     }
-    /*private IEnumerator PreventMultipleJumps()
-    {
-        isJumping = true;
-        yield return new WaitForSeconds(1f); 
-        isJumping = false;
-    }*/
     private void CamarasAimInput(bool isAiming)
     {
         if (isAiming)

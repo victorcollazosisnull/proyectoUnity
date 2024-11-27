@@ -34,9 +34,9 @@ public class LaraCroftAnimations : MonoBehaviour
         animator.SetBool("LaraIsWalking", isWalking);
     }
 
-    private void JumpAnimation()
+    private void JumpAnimation(bool isJumping)
     {
-        animator.SetTrigger("LaraIsJump");
+        animator.SetBool("LaraIsJumping", isJumping);
     }
 
     private void RunningAnimation(bool isRunning)

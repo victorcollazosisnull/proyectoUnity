@@ -15,7 +15,7 @@ public class NPCInteraction : MonoBehaviour
     private bool isInteracting = false;
 
     public event Action OnInteract;
-    public DialogueManager dialogueManager; 
+    public DialogueManager dialogueManager;
 
     private void Start()
     {
@@ -83,17 +83,22 @@ public class NPCInteraction : MonoBehaviour
 
         if (dialogueManager != null)
         {
-            dialogueManager.StartDialogue(GetDialogueNodes()); 
+            //dialogueManager.StartDialogue(BuildDialogueTree()); 
         }
     }
-
-    private DoubleCircularLinkedList<DialogueNode> GetDialogueNodes()
+    private DialogueNode BuildDialogueTree()
     {
-        var dialogueList = new DoubleCircularLinkedList<DialogueNode>();
+        var rootNode = new DialogueNode("¡Hola, cómo estás?");
+        var node2 = new DialogueNode("Yo? Bien, ¿y tú?");
+        var node3 = new DialogueNode("Me alegro, ¿quieres aceptar una misión?", "Sí", "No");
+        var node4 = new DialogueNode("¡Excelente, nos vemos ahí!");
+        var node5 = new DialogueNode("Para la próxima...");
 
-        dialogueList.InsertAtEnd(new DialogueNode("¡Hola, next ?"));
-        dialogueList.InsertAtEnd(new DialogueNode("Qué harás", "Sí", "No", true));
+        rootNode.SetYesNode(node2); 
+        node2.SetYesNode(node3);    
+        node3.SetYesNode(node4); 
+        node3.SetNoNode(node5);   
 
-        return dialogueList;
+        return rootNode; 
     }
 }
