@@ -36,7 +36,7 @@ public class LaraCroftMovement : MonoBehaviour
     public event Action<bool> OnRunningAnimation;
     public event Action<bool> OnCrouchAnimation; 
     public event Action<bool> OnCrouchWalkingAnimation;
-
+    private bool LaraIsInteracting;
     [Header("Raycast Detection Floor")]
     [SerializeField] private bool isJumping = false;
     [SerializeField] private bool isWalking = false;

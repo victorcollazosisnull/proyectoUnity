@@ -4,130 +4,86 @@ using TMPro;
 public class DialogueManager : MonoBehaviour
 {
     [SerializeField] private GameObject dialogueUI;
+    [SerializeField] private GameObject nextButton;
     [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private TextMeshProUGUI noOption;
     [SerializeField] private TextMeshProUGUI yesOption;
-    [SerializeField] private GameObject nextOption;
     [SerializeField] private GameObject panelYesOrNo;
-    [SerializeField] private GameObject finishDialogue;
+    private DialogueNode currentNode;
 
-    private DoubleCircularLinkedList<DialoguesNodes> dialogueNodes = new DoubleCircularLinkedList<DialoguesNodes>();
-    private DoubleCircularLinkedList<DialoguesNodes>.Node currentNode;
-    public event Action OnDialogueEnded;
+    public event Action OnDialogueEnd;
 
-    public NPCMovement npcMovement;
-
-    public void EndDialogue()
+    public void StartDialogue(DialogueNode rootNode)
     {
-        dialogueUI.SetActive(false);
-        Debug.Log("Diálogo terminado.");
-        OnDialogueEnded?.Invoke();
-
-        if (npcMovement != null)
+        if (rootNode == null)
         {
-            npcMovement.ResumePatrol();
-        }
-    }
-
-    public void StartDialogue(DoubleCircularLinkedList<DialoguesNodes> nodes)
-    {
-        if (nodes == null || nodes.Count == 0)
-        {
-            Debug.LogError("Lista de diálogos vacía.");
-            dialogueUI.SetActive(false);
+            Debug.LogError("Nodo nulo");
             return;
         }
-
-        dialogueNodes = nodes;
-        currentNode = dialogueNodes.Head;
+        dialogueUI.SetActive(true);
+        panelYesOrNo.SetActive(false); 
+        currentNode = rootNode;
         ShowCurrentDialogue();
-    }
-
-    public void OnCloseButtonClicked()
-    {
-        EndDialogue();
     }
 
     private void ShowCurrentDialogue()
     {
-        if (currentNode == null || currentNode.Value == null)
+        if (currentNode == null)
         {
             EndDialogue();
             return;
         }
 
-        dialogueUI.SetActive(true);
-        dialogueText.text = currentNode.Value.Text;
+        dialogueText.text = currentNode.Text;
 
-        if (currentNode.Value.HasOptions)
+        if (currentNode.OptionYes != null || currentNode.OptionNo != null)
         {
-            nextOption.SetActive(false);
             panelYesOrNo.SetActive(true);
-            noOption.text = currentNode.Value.noOption;
-            yesOption.text = currentNode.Value.yesOption;
-            finishDialogue.SetActive(false);
+            nextButton.SetActive(false);
+            yesOption.text = currentNode.OptionYes;
+            noOption.text = currentNode.OptionNo;
         }
         else
         {
-            nextOption.SetActive(true);
             panelYesOrNo.SetActive(false);
-            finishDialogue.SetActive(true);
+            nextButton.SetActive(true);
+            yesOption.text = "";
+            noOption.text = "";
         }
     }
 
-    public void OnNextSelected()
+    public void OnYesOptionSelected()
     {
-        if (currentNode.Value.HasOptions)
+        if (currentNode.YesNode != null)
         {
-            return;
+            currentNode = currentNode.YesNode;
+            ShowCurrentDialogue();
         }
-        AdvanceDialogue();
-    }
-
-    public void OnLeftOptionSelected()
-    {
-        HandleChoice(true);
-    }
-
-    public void OnRightOptionSelected()
-    {
-        HandleChoice(false);
-    }
-
-    private void HandleChoice(bool accepted)
-    {
-        string result = accepted ? "Ok, ¡gogogo!" : "Para la próxima.";
-        dialogueText.text = result;
-        AdvanceDialogue();
-    }
-
-    private void AdvanceDialogue()
-    {
-        if (currentNode.Next == null || currentNode.Next == dialogueNodes.Head)
+        else
         {
             EndDialogue();
-            Debug.Log("Fin del diálogo.");
+        }
+    }
+
+    public void OnNoOptionSelected()
+    {
+        if (currentNode.NoNode != null)
+        {
+            currentNode = currentNode.NoNode;
+            ShowCurrentDialogue();
         }
         else
         {
-            currentNode = currentNode.Next;
-            ShowCurrentDialogue();
-            Debug.Log("Avanzando al siguiente nodo.");
+            EndDialogue();
         }
     }
-}
-public class DialoguesNodes
-{
-    public string Text { get; set; }
-    public string noOption { get; set; } 
-    public string yesOption { get; set; }
-    public bool HasOptions { get; set; } 
 
-    public DialoguesNodes(string text, string leftOption = null, string rightOption = null, bool hasOptions = false)
+    private void EndDialogue()
     {
-        Text = text;
-        noOption = leftOption;
-        yesOption = rightOption;
-        HasOptions = hasOptions;
+        dialogueUI.SetActive(false);
+        panelYesOrNo.SetActive(false);
+        nextButton.SetActive(false);
+        Debug.Log("Diálogo terminado.");
+        OnDialogueEnd?.Invoke();
     }
 }

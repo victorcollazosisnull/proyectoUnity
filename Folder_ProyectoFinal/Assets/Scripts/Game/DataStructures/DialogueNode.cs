@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class DialogueNode : MonoBehaviour
+public class DialogueNode 
 {
     public string Text { get; private set; }
     public string OptionYes { get; private set; }

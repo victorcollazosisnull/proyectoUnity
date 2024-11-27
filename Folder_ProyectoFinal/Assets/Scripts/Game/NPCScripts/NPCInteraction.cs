@@ -25,11 +25,19 @@ public class NPCInteraction : MonoBehaviour
     private void OnEnable()
     {
         OnInteract += InteractWithNPC;
+        if (dialogueManager != null)
+        {
+            dialogueManager.OnDialogueEnd += EndInteraction;
+        }
     }
 
     private void OnDisable()
     {
         OnInteract -= InteractWithNPC;
+        if (dialogueManager != null)
+        {
+            dialogueManager.OnDialogueEnd -= EndInteraction;
+        }
     }
 
     private void Update()
@@ -83,16 +91,24 @@ public class NPCInteraction : MonoBehaviour
 
         if (dialogueManager != null)
         {
-            //dialogueManager.StartDialogue(BuildDialogueTree()); 
+            var rootNode = BuildDialogueTree();
+            dialogueManager.StartDialogue(rootNode);
+            Debug.Log("Diálogo iniciado");
         }
+    }
+    private void EndInteraction()
+    {
+        isInteracting = false;
+        npcMovement.ResumePatrol();
+        npcAnimator.SetTrigger("Walk"); 
     }
     private DialogueNode BuildDialogueTree()
     {
-        var rootNode = new DialogueNode("¡Hola, cómo estás?");
-        var node2 = new DialogueNode("Yo? Bien, ¿y tú?");
-        var node3 = new DialogueNode("Me alegro, ¿quieres aceptar una misión?", "Sí", "No");
-        var node4 = new DialogueNode("¡Excelente, nos vemos ahí!");
-        var node5 = new DialogueNode("Para la próxima...");
+        var rootNode = new DialogueNode("NPC: hola te puedo preguntar algo");
+        var node2 = new DialogueNode("TOMB RAIDER: dime");
+        var node3 = new DialogueNode("NPC: Victor es el mas gozu?", "Sí", "No");
+        var node4 = new DialogueNode("TOMB RAIDER: Obvio <3");
+        var node5 = new DialogueNode("TOMB RAIDER: nahh, es realidad si es muy gozu y fachero");
 
         rootNode.SetYesNode(node2); 
         node2.SetYesNode(node3);    
