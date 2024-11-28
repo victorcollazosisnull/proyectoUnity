@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c6d2fa36c5091154aa0f2090e7755eac
+guid: 8720d967110f7164299290fb7917b5f5
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -33,11 +33,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: JUMP
+      name: SHOT ARROW
       takeName: mixamo.com
       internalID: -203655887218126122
       firstFrame: 0
-      lastFrame: 57
+      lastFrame: 21
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

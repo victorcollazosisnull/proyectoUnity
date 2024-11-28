@@ -10,8 +10,9 @@ public class LaraCroftInventory : MonoBehaviour
     public Image[] InventoryBoxes;
     private Vector3 originalScaleBoxes;
     private Vector3 highlightedScaleBoxes = new Vector3(1.3f, 1.3f, 1.3f);
-    private float lastScroll = 0f; 
+    private float lastScroll = 0f;
     private float scrollSensitivity = 0.1f;
+    public GameObject bow;
 
     void Start()
     {
@@ -24,22 +25,30 @@ public class LaraCroftInventory : MonoBehaviour
         HighlightCurrentBox();
         inputReader = GetComponent<LaraCroftInputReader>();
         inputReader.OnMouseWheelInput += HandleMouse;
+
+        if (bow != null)
+        {
+            bow.SetActive(false);
+        }
     }
+
     public void AddImageToBox(Sprite itemSprite)
     {
         for (int i = 0; i < InventoryBoxes.Length; i++)
         {
-            if (InventoryBoxes[i].sprite == null) 
+            if (InventoryBoxes[i].sprite == null)
             {
-                InventoryBoxes[i].sprite = itemSprite; 
-                return; 
+                InventoryBoxes[i].sprite = itemSprite;
+                return;
             }
         }
     }
+
     void OnDisable()
     {
         inputReader.OnMouseWheelInput -= HandleMouse;
     }
+
     private void HandleMouse(float scroll)
     {
         if (Mathf.Abs(scroll - lastScroll) > scrollSensitivity)
@@ -65,6 +74,8 @@ public class LaraCroftInventory : MonoBehaviour
         UnhighlightCurrentBox();
         currentBox = currentBox.Next;
         HighlightCurrentBox();
+
+        CheckForBow();
     }
 
     private void MoveToPreviousBox()
@@ -76,6 +87,8 @@ public class LaraCroftInventory : MonoBehaviour
         UnhighlightCurrentBox();
         currentBox = currentBox.Previous;
         HighlightCurrentBox();
+
+        CheckForBow();
     }
 
     private void HighlightCurrentBox()
@@ -86,5 +99,20 @@ public class LaraCroftInventory : MonoBehaviour
     private void UnhighlightCurrentBox()
     {
         currentBox.Value.transform.localScale = originalScaleBoxes;
+    }
+
+    private void CheckForBow()
+    {
+        if (bow == null) return;
+
+        Sprite bowSprite = bow.GetComponent<SpriteRenderer>().sprite; 
+        if (currentBox.Value.sprite == bowSprite)
+        {
+            bow.SetActive(true); 
+        }
+        else
+        {
+            bow.SetActive(false); 
+        }
     }
 }
