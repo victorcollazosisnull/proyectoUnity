@@ -36,6 +36,11 @@ public class LaraCroftMovement : MonoBehaviour
     public event Action<bool> OnRunningAnimation;
     public event Action<bool> OnCrouchAnimation; 
     public event Action<bool> OnCrouchWalkingAnimation;
+    public event Action<bool> OnBowAimAnimation; 
+    public event Action OnBowShootAnimation;
+    //------ARROW------
+    private bool LaraHasBow = false; 
+    //-----NPC------
     private bool LaraIsInteracting;
     [Header("Raycast Detection Floor")]
     [SerializeField] private bool isJumping = false;
@@ -74,6 +79,7 @@ public class LaraCroftMovement : MonoBehaviour
         inputReader.OnCrouchInput += Crouch;
         inputReader.OnAimInput += HandleAimInput;
         inputReader.OnAimInput += CamarasAimInput;
+        inputReader.OnAttackInput += HandleAttackInput;
     }
 
     private void OnDisable() 
@@ -85,6 +91,7 @@ public class LaraCroftMovement : MonoBehaviour
         inputReader.OnCrouchInput -= Crouch;
         inputReader.OnAimInput -= HandleAimInput;
         inputReader.OnAimInput -= CamarasAimInput;
+        inputReader.OnAttackInput -= HandleAttackInput;
     }
     //------------Movement3D--------------
     private void Movement(Vector2 input)
@@ -156,8 +163,28 @@ public class LaraCroftMovement : MonoBehaviour
     private void HandleAimInput(bool isAiming)
     {
         this.LaraIsAiming = isAiming;
+
+        if (LaraHasBow)
+        {
+            OnBowAimAnimation?.Invoke(isAiming); 
+        }
+        else
+        {
+            CamarasAimInput(isAiming); 
+        }
     }
 
+    private void HandleAttackInput()
+    {
+        if (LaraHasBow && LaraIsAiming)
+        {
+            OnBowShootAnimation?.Invoke(); 
+        }
+    }
+    public void EquipBow(bool hasBow)
+    {
+        LaraHasBow = hasBow;
+    }
     private void Jump()
     {
         LaraRigidbody.AddForce(Vector3.up * LarajumpForce, ForceMode.Impulse);
