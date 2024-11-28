@@ -106,9 +106,9 @@ public class NPCInteraction : MonoBehaviour
     {
         var rootNode = new DialogueNode("NPC: hola te puedo preguntar algo");
         var node2 = new DialogueNode("TOMB RAIDER: dime");
-        var node3 = new DialogueNode("NPC: Victor es el mas gozu?", "Sí", "No");
+        var node3 = new DialogueNode("NPC: Victor es el mas gozu?", "Sí", "Por supuesto");
         var node4 = new DialogueNode("TOMB RAIDER: Obvio <3");
-        var node5 = new DialogueNode("TOMB RAIDER: nahh, es realidad si es muy gozu y fachero");
+        var node5 = new DialogueNode("TOMB RAIDER: como debe ser");
 
         rootNode.SetYesNode(node2); 
         node2.SetYesNode(node3);    
