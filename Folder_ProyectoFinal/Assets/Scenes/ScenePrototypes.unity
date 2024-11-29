@@ -2042,7 +2042,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 496430f2519828e488a67c03a8300dfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  laraMovement: {fileID: 0}
+  laraMovement: {fileID: 570426884}
   npcInteraction: {fileID: 258882494}
 --- !u!195 &570426891
 NavMeshAgent:
@@ -4146,6 +4146,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acc7658da6088634ba75ed5fc17d3959, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  movement: {fileID: 570426884}
+  inputReader: {fileID: 570426889}
   dialogueUI: {fileID: 349381681}
   nextButton: {fileID: 340690324}
   dialogueText: {fileID: 1091985680}

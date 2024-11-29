@@ -96,9 +96,6 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: LaraIsWalking
-    m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: LaraIsCrounched
     m_EventTreshold: 0
@@ -139,10 +136,10 @@ AnimatorStateMachine:
     m_Position: {x: 400, y: 300, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 6032401578491567848}
-    m_Position: {x: 250, y: 160, z: 0}
+    m_Position: {x: 270, y: 160, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -3810699657483504472}
-    m_Position: {x: 630, y: 320, z: 0}
+    m_Position: {x: 720, y: 320, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 5910895015393422935}
     m_Position: {x: 550, y: -130, z: 0}

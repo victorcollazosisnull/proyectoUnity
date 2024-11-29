@@ -3,6 +3,8 @@ using System;
 using TMPro;
 public class DialogueManager : MonoBehaviour
 {
+    [SerializeField] private LaraCroftMovement movement;
+    [SerializeField] private LaraCroftInputReader inputReader;
     [SerializeField] private GameObject dialogueUI;
     [SerializeField] private GameObject nextButton;
     [SerializeField] private TextMeshProUGUI dialogueText;
@@ -24,6 +26,10 @@ public class DialogueManager : MonoBehaviour
         panelYesOrNo.SetActive(false); 
         currentNode = rootNode;
         ShowCurrentDialogue();
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        inputReader.BlockInputs(true);
+        movement.StopMovement();
     }
 
     private void ShowCurrentDialogue()
@@ -85,5 +91,9 @@ public class DialogueManager : MonoBehaviour
         nextButton.SetActive(false);
         Debug.Log("Diálogo terminado.");
         OnDialogueEnd?.Invoke();
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        inputReader.BlockInputs(false);
+        movement.ResumeMovement();
     }
 }

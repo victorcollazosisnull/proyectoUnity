@@ -4,6 +4,7 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;
+using Unity.VisualScripting;
 
 public class LaraCroftMovement : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class LaraCroftMovement : MonoBehaviour
     [SerializeField] private float LaraWalk;
     [SerializeField] public float LaraRun;
     [SerializeField] private bool LaraIsRunning = false;
+    private bool canMove = true;
     //------CROUNCHED------
     private bool LaraisCrouching = false; 
     private bool LaraisWalkingCrouched = false;
@@ -61,13 +63,13 @@ public class LaraCroftMovement : MonoBehaviour
     {
         LaraRigidbody = GetComponent<Rigidbody>();
         LaraAnimator = GetComponent<Animator>();
-        inputReader = FindAnyObjectByType<LaraCroftInputReader>();
+        inputReader = GetComponent<LaraCroftInputReader>();
     }
 
     private void Start() 
     {
-        //Cursor.lockState = CursorLockMode.Locked;
-        //Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
     //------------Sub Input Reader--------------
     private void OnEnable() 
@@ -158,7 +160,11 @@ public class LaraCroftMovement : MonoBehaviour
     private void Update()
     {
         RotateCamera();
-        CheckGroundStatus(); 
+        CheckGroundStatus();
+        if (canMove)
+        {
+            
+        }
     }
     private void HandleAimInput(bool isAiming)
     {
@@ -242,5 +248,20 @@ public class LaraCroftMovement : MonoBehaviour
             mainCamera.Priority = 2;
             aimCamera.Priority = 1;
         }
+    }
+    public void SetAnimationState(string animationName, bool state)
+    {
+        LaraAnimator.SetBool(animationName, state);
+    }
+    public void StopMovement()
+    {
+        canMove = false;
+        LaraAnimator.SetBool("LaraIsWalking", false);
+        LaraAnimator.SetBool("LaraIsRunning", false);
+    }
+
+    public void ResumeMovement()
+    {
+        canMove = true;
     }
 }
