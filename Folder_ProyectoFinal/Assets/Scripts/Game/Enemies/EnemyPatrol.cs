@@ -92,7 +92,7 @@ public class EnemyPatrol : MonoBehaviour
         currentChaseSpeed = initialSpeed; // Reinicia V initial
     }
 
-    public void StopChase()
+    public  void StopChase()
     {
         isChasing = false;
         chaseTime = 0f; // Reseteo time
