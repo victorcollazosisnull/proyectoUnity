@@ -29,6 +29,8 @@ public class GraphControlNPC : MonoBehaviour
         {
             NodoControl node = AllNodes.Get(i);
             node.SetRandomAdjacentNodes(AllNodes);
+
+            Debug.Log($"el nodo {node.name} si tiene {node.adjacentNodes.Count()} vecinos");
         }
     }
 

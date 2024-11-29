@@ -11,16 +11,37 @@ public class NodoControl : MonoBehaviour
 
     public void SetRandomAdjacentNodes(SimpleLinkedList<NodoControl> allNodes)
     {
-        int numberOfConnections = Random.Range(1, 3);
+        int numberOfConnections = Random.Range(1, 4);
 
         for (int i = 0; i < numberOfConnections; i++)
         {
             NodoControl randomNode = allNodes.Get(Random.Range(0, allNodes.Count()));
-            if (randomNode != this)
+
+            if (randomNode != this && !IsAlreadyConnected(randomNode))
             {
                 AddAdjacentNode(randomNode, Random.Range(1f, 4f));
+                randomNode.AddAdjacentNode(this, Random.Range(1f, 4f)); 
             }
         }
+
+        if (adjacentNodes.Count() == 0 && allNodes.Count() > 1)
+        {
+            NodoControl fallbackNode = allNodes.Get(Random.Range(0, allNodes.Count()));
+            if (fallbackNode != this)
+            {
+                AddAdjacentNode(fallbackNode, Random.Range(1f, 4f));
+                fallbackNode.AddAdjacentNode(this, Random.Range(1f, 4f));
+            }
+        }
+    }
+    private bool IsAlreadyConnected(NodoControl node)
+    {
+        for (int i = 0; i < adjacentNodes.Count(); i++)
+        {
+            if (adjacentNodes.Get(i).node == node)
+                return true;
+        }
+        return false;
     }
 
     public void AddAdjacentNode(NodoControl node, float weight)
