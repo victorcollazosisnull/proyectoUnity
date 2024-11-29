@@ -3,11 +3,17 @@ using UnityEngine;
 public class EnemyPatrol : MonoBehaviour
 {
     [Header("Enemy Settings")]
-    public float patrolSpeed = 2f;
+    public float patrolSpeed = 1f;
     public float detectionRadius = 5f;
     public float stopChaseRadius = 7f;
     public Transform player;
-
+    [Header("MRUV")]
+    public float initialSpeed = 4f; 
+    public float maxSpeed = 10f; 
+    public float acceleration = 0.5f;
+    // Variables MRUV
+    private float currentChaseSpeed;  
+    private float chaseTime;
     [Header("Enemy Patrol")]
     public SimpleLinkedList<NodoControl> allNodes;
     private NodoControl currentNode;
@@ -16,6 +22,7 @@ public class EnemyPatrol : MonoBehaviour
 
     private void Update()
     {
+        UpdateEnemyState();
         if (isChasing)
         {
             ChasePlayer();
@@ -64,37 +71,85 @@ public class EnemyPatrol : MonoBehaviour
 
     private void CheckPlayerDistance()
     {
-        if (Vector3.Distance(transform.position, player.position) <= detectionRadius)
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+        if (distanceToPlayer <= detectionRadius)
         {
-            isChasing = true;
+            if (!isChasing)
+            {
+                StartChase(); 
+            }
         }
-        if (Vector3.Distance(transform.position, player.position) > stopChaseRadius)
+        else if (distanceToPlayer > stopChaseRadius)
         {
-            isChasing = false;
-            SetNewPosition(currentNode.transform.position);
+            StopChase(); 
         }
+    }
+    public void StartChase()
+    {
+        isChasing = true;
+        chaseTime = 0f; // Reinicia time
+        currentChaseSpeed = initialSpeed; // Reinicia V initial
+    }
+
+    public void StopChase()
+    {
+        isChasing = false;
+        chaseTime = 0f; // Reseteo time
+        currentChaseSpeed = initialSpeed; // Reseteo speed
+        SetNewPosition(currentNode.transform.position);
     }
 
     private void ChasePlayer()
     {
+        chaseTime += Time.deltaTime;
+
+        currentChaseSpeed = Mathf.Min(initialSpeed + acceleration * chaseTime, maxSpeed);
+
         Vector3 directionToPlayer = new Vector3(player.position.x, transform.position.y, player.position.z) - transform.position;
-        transform.position = Vector3.MoveTowards(transform.position, player.position, patrolSpeed * Time.deltaTime);  
+        transform.position = Vector3.MoveTowards(transform.position, player.position, currentChaseSpeed * Time.deltaTime);
+
         LookAtMoveDirection(player.position);
 
-        if (Vector3.Distance(transform.position, player.position) > stopChaseRadius)
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        if (distanceToPlayer < 1.5f) 
         {
-            isChasing = false;
-            SetNewPosition(currentNode.transform.position);
+            ResetChaseSpeed(); 
         }
+
+        if (distanceToPlayer > stopChaseRadius)
+        {
+            StopChase();
+        }
+    }
+    private void ResetChaseSpeed()
+    {
+        chaseTime = 0f; 
+        currentChaseSpeed = initialSpeed; 
     }
 
     private void LookAtMoveDirection(Vector3 targetPosition)
     {
         Vector3 direction = (targetPosition - transform.position).normalized;
-        if (direction != Vector3.zero)
+        direction.y = 0; 
+        if (direction.sqrMagnitude > 0.01f) 
         {
             Quaternion lookRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f); 
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
+        }
+    }
+
+    private void UpdateEnemyState()
+    {
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+        if (distanceToPlayer <= detectionRadius)
+        {
+            isChasing = true;
+        }
+        else if (distanceToPlayer > stopChaseRadius)
+        {
+            isChasing = false;
         }
     }
 }

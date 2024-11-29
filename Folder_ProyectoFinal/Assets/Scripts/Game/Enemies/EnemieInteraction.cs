@@ -7,26 +7,12 @@ public class EnemieInteraction : MonoBehaviour
     public EnemyPatrol enemyMovement;
     private bool playerClose = false;
 
-    private void Update()
-    {
-        if (playerClose)
-        {
-            if (Vector3.Distance(transform.position, player.position) < interactionRadius)
-            {
-               // enemyMovement.StartChasing(); 
-            }
-        }
-        else
-        {
-           // enemyMovement.StopChasing(); 
-        }
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
             playerClose = true;
+            enemyMovement.StartChase();
         }
     }
 
@@ -35,6 +21,7 @@ public class EnemieInteraction : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerClose = false;
+            enemyMovement.StopChase();
         }
     }
 }
