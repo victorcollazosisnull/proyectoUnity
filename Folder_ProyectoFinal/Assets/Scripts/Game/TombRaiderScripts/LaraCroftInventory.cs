@@ -12,7 +12,10 @@ public class LaraCroftInventory : MonoBehaviour
     private Vector3 highlightedScaleBoxes = new Vector3(1.3f, 1.3f, 1.3f);
     private float lastScroll = 0f;
     private float scrollSensitivity = 0.1f;
-    public GameObject bow;
+
+    [Header("References")]
+    public GameObject bow; 
+    private LaraCroftMovement laraMovement;
 
     void Start()
     {
@@ -23,12 +26,15 @@ public class LaraCroftInventory : MonoBehaviour
         currentBox = inventorySlots.Head;
         originalScaleBoxes = currentBox.Value.transform.localScale;
         HighlightCurrentBox();
+
         inputReader = GetComponent<LaraCroftInputReader>();
+        laraMovement = GetComponent<LaraCroftMovement>();
+
         inputReader.OnMouseWheelInput += HandleMouse;
 
         if (bow != null)
         {
-            bow.SetActive(false);
+            bow.SetActive(false); 
         }
     }
 
@@ -103,16 +109,17 @@ public class LaraCroftInventory : MonoBehaviour
 
     private void CheckForBow()
     {
-        if (bow == null) return;
+        if (bow == null || laraMovement == null) return;
 
-        Sprite bowSprite = bow.GetComponent<SpriteRenderer>().sprite; 
-        if (currentBox.Value.sprite == bowSprite)
+        if (currentBox.Value.sprite != null && currentBox.Value.sprite.name == "arrow") 
         {
-            bow.SetActive(true); 
+            bow.SetActive(true);
+            laraMovement.EquipBow(true); 
         }
         else
         {
-            bow.SetActive(false); 
+            bow.SetActive(false);
+            laraMovement.EquipBow(false); 
         }
     }
 }

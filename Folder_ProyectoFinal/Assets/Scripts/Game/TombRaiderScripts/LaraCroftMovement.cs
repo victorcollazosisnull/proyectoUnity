@@ -18,7 +18,7 @@ public class LaraCroftMovement : MonoBehaviour
     [SerializeField] private float LaraWalk;
     [SerializeField] public float LaraRun;
     [SerializeField] private bool LaraIsRunning = false;
-    private bool canMove = true;
+    public bool canMove = true;
     //------CROUNCHED------
     private bool LaraisCrouching = false; 
     private bool LaraisWalkingCrouched = false;
@@ -41,7 +41,7 @@ public class LaraCroftMovement : MonoBehaviour
     public event Action<bool> OnBowAimAnimation; 
     public event Action OnBowShootAnimation;
     //------ARROW------
-    private bool LaraHasBow = false; 
+    public bool LaraHasBow = false; 
     //-----NPC------
     private bool LaraIsInteracting;
     [Header("Raycast Detection Floor")]
@@ -168,15 +168,15 @@ public class LaraCroftMovement : MonoBehaviour
     }
     private void HandleAimInput(bool isAiming)
     {
+
         this.LaraIsAiming = isAiming;
 
         if (LaraHasBow)
         {
             OnBowAimAnimation?.Invoke(isAiming); 
-        }
-        else
-        {
-            CamarasAimInput(isAiming); 
+            LaraAnimator.SetBool("LaraIsAimingBow", isAiming); 
+
+            CamarasAimInput(isAiming);
         }
     }
 
@@ -185,11 +185,20 @@ public class LaraCroftMovement : MonoBehaviour
         if (LaraHasBow && LaraIsAiming)
         {
             OnBowShootAnimation?.Invoke(); 
+            LaraAnimator.SetTrigger("LaraShootBow");
         }
     }
     public void EquipBow(bool hasBow)
     {
         LaraHasBow = hasBow;
+        if (hasBow)
+        {
+            Debug.Log("Lara ahora tiene el arco .");
+        }
+        else
+        {
+            Debug.Log("Lara DEJO de usar el arco.");
+        }
     }
     private void Jump()
     {
