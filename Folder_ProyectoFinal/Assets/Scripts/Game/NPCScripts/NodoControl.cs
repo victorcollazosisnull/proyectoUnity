@@ -57,18 +57,6 @@ public class NodoControl : MonoBehaviour
         }
         return null;
     }
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.green;
-        for (int i = 0; i < adjacentNodes.Count(); i++)
-        {
-            var nodeInfo = adjacentNodes.Get(i);
-            if (nodeInfo != null && nodeInfo.node != null)
-            {
-                Gizmos.DrawLine(transform.position, nodeInfo.node.transform.position);
-            }
-        }
-    }
 }
 public class AdjacentNodeInfo
 {
