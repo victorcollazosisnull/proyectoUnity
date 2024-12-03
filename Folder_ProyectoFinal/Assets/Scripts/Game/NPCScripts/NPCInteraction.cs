@@ -13,13 +13,19 @@ public class NPCInteraction : MonoBehaviour
     public Transform player;
     private bool playerClose = false;
     private bool isInteracting = false;
-
+    public bool isMainNPC = false;
     public event Action OnInteract;
     public DialogueManager dialogueManager;
+    [Header("Scriptable Objetc Dialogues")]
+    public NPCDialogueSO nPCDialogue;
 
     private void Start()
     {
         interactText.gameObject.SetActive(false);
+        if (isMainNPC)
+        {
+            npcAnimator.SetTrigger("Idle");
+        }
     }
 
     private void OnEnable()
@@ -91,16 +97,44 @@ public class NPCInteraction : MonoBehaviour
 
         if (dialogueManager != null)
         {
-            var rootNode = BuildDialogueTree();
+            DialogueNode rootNode;
+
+            if (isMainNPC) 
+            {
+                rootNode = BuildDialogueTree();
+            }
+            else 
+            {
+                rootNode = BuildDialogueTreeWithTextOnly();
+            }
+
             dialogueManager.StartDialogue(rootNode);
-            Debug.Log("Diálogo iniciado");
         }
+    }
+
+    private DialogueNode BuildDialogueTreeWithTextOnly()
+    {
+        if (nPCDialogue == null)
+        {
+            Debug.LogError("ScriptableObject missing :(");
+            return null;
+        }
+        var rootNode = new DialogueNode(nPCDialogue.dialogueText); 
+        rootNode.SetYesNode(null); 
+        return rootNode;
     }
     private void EndInteraction()
     {
+        if (isMainNPC)
+        {
+            npcAnimator.SetTrigger("Idle");
+        }
+        else
+        {
+            npcMovement.ResumePatrol();
+            npcAnimator.SetTrigger("Walk");
+        }
         isInteracting = false;
-        npcMovement.ResumePatrol();
-        npcAnimator.SetTrigger("Walk"); 
     }
     private DialogueNode BuildDialogueTree()
     {
