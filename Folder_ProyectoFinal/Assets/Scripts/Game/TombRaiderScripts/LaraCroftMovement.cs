@@ -227,7 +227,6 @@ public class LaraCroftMovement : MonoBehaviour
         Vector3 movement = (forward * movementInput.z + right * movementInput.x) * currentSpeed;
         movement.y = LaraRigidbody.velocity.y;
         LaraRigidbody.velocity = movement;
-
     }
     //-----RAYCAST-----
     private void CheckGroundStatus()
