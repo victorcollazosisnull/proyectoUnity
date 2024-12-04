@@ -6,29 +6,35 @@ using Cinemachine;
 
 public class GameFlowController : MonoBehaviour
 {
-    public static event Action OnMenuExited; 
-    public static event Action OnGameStarted; 
+    public static event Action OnMenuExited;
+    public static event Action OnGameStarted;
 
-    [SerializeField] private LaraCroftInputReader InputReader; 
-    public Animator playerAnimator; 
-    public CinemachineVirtualCamera menuCamera; 
-    public CinemachineVirtualCamera gameplayCamera; 
-    public float transitionTime = 1f; 
+    [SerializeField] private LaraCroftInputReader InputReader;
+    public Animator playerAnimator;
+    public CinemachineVirtualCamera menuCamera;
+    public CinemachineVirtualCamera gameplayCamera;
+    public CinemachineVirtualCamera shipCamera;
+    public float transitionTime = 0.5f;
 
     [Header("CanvasGame")]
     public GameObject canvasMenu;
     public GameObject canvasGame;
 
     [Header("Panel Options")]
-    public PanelOptionsController panelOptionsController; 
+    [SerializeField] private PanelOptionsController panelOptionsController;
+
+    [Header("Panel Credits")]
+    [SerializeField] private PanelCreditsController panelCreditsController;
 
     private void Start()
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        menuCamera.gameObject.SetActive(true);
-        gameplayCamera.gameObject.SetActive(false);
+        menuCamera.Priority = 10;
+        gameplayCamera.Priority = 0;
+        shipCamera.Priority = 0;
+
         canvasMenu.SetActive(true);
         canvasGame.SetActive(false);
 
@@ -48,8 +54,8 @@ public class GameFlowController : MonoBehaviour
 
         yield return new WaitForSeconds(transitionTime);
 
-        menuCamera.gameObject.SetActive(false);
-        gameplayCamera.gameObject.SetActive(true);
+        menuCamera.Priority = 0;
+        gameplayCamera.Priority = 10;
 
         canvasMenu.SetActive(false);
         canvasGame.SetActive(true);
@@ -65,10 +71,33 @@ public class GameFlowController : MonoBehaviour
     public void OnOptionsButton()
     {
         panelOptionsController.ShowPanelOptions();
+        ToggleCamera(shipCamera);
     }
 
-    public void OnExitButton()
+    public void OnCreditsButton()
     {
-        Application.Quit();
+        panelCreditsController.ToggleCreditsPanel();
+        ToggleCamera(shipCamera);
+    }
+
+    public void OnExitOptions()
+    {
+        panelOptionsController.ShowPanelOptions(); 
+        ToggleCamera(menuCamera);
+    }
+
+    public void OnExitCredits()
+    {
+        panelCreditsController.ToggleCreditsPanel();
+        ToggleCamera(menuCamera);
+    }
+
+    private void ToggleCamera(CinemachineVirtualCamera targetCamera)
+    {
+        menuCamera.Priority = 0;
+        gameplayCamera.Priority = 0;
+        shipCamera.Priority = 0;
+
+        targetCamera.Priority = 10;
     }
 }
