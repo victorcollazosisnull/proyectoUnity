@@ -24,6 +24,26 @@ public class LaraCroftInputReader : MonoBehaviour
     {
         if (isInputBlocked) return;
     }
+    private void OnEnable()
+    {
+        GameFlowController.OnGameStarted += EnableInputs;
+        GameFlowController.OnMenuExited += DisableInputsTemporarily;
+    }
+
+    private void OnDisable()
+    {
+        GameFlowController.OnGameStarted -= EnableInputs;
+        GameFlowController.OnMenuExited -= DisableInputsTemporarily;
+    }
+    private void EnableInputs()
+    {
+        isInputBlocked = false;
+    }
+
+    private void DisableInputsTemporarily()
+    {
+        isInputBlocked = true;
+    }
     public void ReadDirection(InputAction.CallbackContext context)
     {
         if (isInputBlocked) return;

@@ -3,14 +3,20 @@ using UnityEngine.SceneManagement;
 
 public class MenuController : MonoBehaviour
 {
+    public GameFlowController gameFlowController; 
+
     public void PlayGame()
     {
-        SceneManager.LoadScene("ScenePrototypes");
-        MusicManager.Instance.StopAllMusic();
-        MusicManager.Instance.PlayGameMusic();
+        gameFlowController.OnPlayButton();
     }
+
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public void OptionsButton()
+    {
+        gameFlowController.OnOptionsButton();
     }
 }
