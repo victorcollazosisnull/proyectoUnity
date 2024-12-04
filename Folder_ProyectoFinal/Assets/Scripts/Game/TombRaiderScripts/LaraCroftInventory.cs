@@ -40,13 +40,15 @@ public class LaraCroftInventory : MonoBehaviour
 
     public void AddImageToBox(Sprite itemSprite)
     {
-        for (int i = 0; i < InventoryBoxes.Length; i++)
+        var node = inventorySlots.Head;
+        for (int i = 0; i < inventorySlots.Count; i++)
         {
-            if (InventoryBoxes[i].sprite == null)
+            if (node.Value.sprite == null)
             {
-                InventoryBoxes[i].sprite = itemSprite;
+                node.Value.sprite = itemSprite;
                 return;
             }
+            node = node.Next;
         }
     }
 
@@ -107,7 +109,7 @@ public class LaraCroftInventory : MonoBehaviour
         currentBox.Value.transform.localScale = originalScaleBoxes;
     }
 
-    private void CheckForBow()
+    private void CheckForBow() // switch for more items
     {
         if (bow == null || laraMovement == null) return;
 

@@ -14,25 +14,23 @@ public class LaraCroftMovement : MonoBehaviour
     private Animator LaraAnimator;
 
     [Header("Lara Croft Movement")]
-    //------MOVEMENT------
     [SerializeField] private float LaraWalk;
-    [SerializeField] public float LaraRun;
+    [SerializeField] private float LaraRun;
     [SerializeField] private bool LaraIsRunning = false;
-    public bool canMove = true;
-    //------CROUNCHED------
-    private bool LaraisCrouching = false; 
-    private bool LaraisWalkingCrouched = false;
-    //------CAMERA------
-    [SerializeField] private float mouseSensitivity;
+    [SerializeField] private bool canMove = true;
+    [SerializeField] private bool LaraisCrouching = false;
+    [SerializeField] private bool LaraisWalkingCrouched = false;
+    [SerializeField] private float LarajumpForce = 5f;
+    [SerializeField] private bool LaraIsAiming = false;
+    [SerializeField] private bool LaraHasBow = false;
+    [SerializeField] private bool LaraIsInteracting;
+
+    public float mouseSensitivity;
     public Transform cameraTransform;
     private Vector3 movementInput;
     private float mouseX, mouseY;
     private float xRotation = 0f;
-    //------JUMP------
-    [SerializeField] private float LarajumpForce = 5f;
-    //------CAMERA AIM------
-    private bool LaraIsAiming = false;
-    // Events Animations
+
     public event Action<bool> OnMovementAnimation;
     public event Action<bool> OnJumpingAnimation;
     public event Action<bool> OnRunningAnimation;
@@ -40,10 +38,7 @@ public class LaraCroftMovement : MonoBehaviour
     public event Action<bool> OnCrouchWalkingAnimation;
     public event Action<bool> OnBowAimAnimation; 
     public event Action OnBowShootAnimation;
-    //------ARROW------
-    public bool LaraHasBow = false; 
-    //-----NPC------
-    private bool LaraIsInteracting;
+
     [Header("Raycast Detection Floor")]
     [SerializeField] private bool isJumping = false;
     [SerializeField] private bool isWalking = false;
@@ -59,6 +54,17 @@ public class LaraCroftMovement : MonoBehaviour
     [Header("Lara Croft Cameras")]
     [SerializeField] private CinemachineVirtualCamera mainCamera;
     [SerializeField] private CinemachineVirtualCamera aimCamera;
+
+    [Header("Lara Croft Arrow And Bow")]
+    public GameObject bowPrefab;
+    public Transform originPoint;
+    public float forceBow;
+    public LineRenderer lineRenderer;
+    public int resolution = 30;
+    public float gravity = -9.81f;
+    private bool isAiming;
+    private Vector3 launchDirection;
+
     void Awake()
     {
         LaraRigidbody = GetComponent<Rigidbody>();
@@ -165,17 +171,25 @@ public class LaraCroftMovement : MonoBehaviour
         {
             
         }
+        if (isAiming && LaraHasBow)
+        {
+            CalculateDirection();
+            ShowTrayectory();
+        }
+        else
+        {
+            lineRenderer.positionCount = 0;
+        }
     }
     private void HandleAimInput(bool isAiming)
     {
-
         this.LaraIsAiming = isAiming;
 
         if (LaraHasBow)
         {
             OnBowAimAnimation?.Invoke(isAiming); 
-            LaraAnimator.SetBool("LaraIsAimingBow", isAiming); 
-
+            LaraAnimator.SetBool("LaraIsAimingBow", isAiming);
+            ShowTrayectory();
             CamarasAimInput(isAiming);
         }
     }
@@ -186,7 +200,45 @@ public class LaraCroftMovement : MonoBehaviour
         {
             OnBowShootAnimation?.Invoke(); 
             LaraAnimator.SetTrigger("LaraShootBow");
+            Shoot();
         }
+    }
+    public void Shoot()
+    {
+        GameObject flecha = Instantiate(bowPrefab, originPoint.position, Quaternion.identity);
+        Rigidbody rb = flecha.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.velocity = launchDirection * forceBow;
+            flecha.transform.rotation = Quaternion.LookRotation(launchDirection);
+        }
+        isAiming = false;
+    }
+
+    private void CalculateDirection()
+    {
+        launchDirection = cameraTransform.forward;
+    }
+
+    public void ShowTrayectory()
+    {
+        Vector3[] trajectoryPoints = new Vector3[resolution];
+
+        for (int i = 0; i < resolution; i++)
+        {
+            float time = i * 0.1f;
+            trajectoryPoints[i] = TrayectoryPoint(time);
+        }
+
+        lineRenderer.positionCount = resolution;
+        lineRenderer.SetPositions(trajectoryPoints);
+    }
+
+    private Vector3 TrayectoryPoint(float time)
+    {
+        Vector3 startPosition = originPoint.position;
+        Vector3 velocity = launchDirection * forceBow;
+        return startPosition + velocity * time + 0.5f * new Vector3(0, gravity, 0) * (time * time);
     }
     public void EquipBow(bool hasBow)
     {
