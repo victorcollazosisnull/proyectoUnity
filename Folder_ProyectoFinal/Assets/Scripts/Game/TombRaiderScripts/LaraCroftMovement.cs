@@ -8,7 +8,6 @@ using Unity.VisualScripting;
 
 public class LaraCroftMovement : MonoBehaviour
 {
-    // Components
     private Rigidbody LaraRigidbody;
     private LaraCroftInputReader inputReader;
     private Animator LaraAnimator;
@@ -77,7 +76,7 @@ public class LaraCroftMovement : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
-    //------------Sub Input Reader--------------
+
     private void OnEnable() 
     {
         inputReader.OnMovementInput += Movement;
@@ -101,20 +100,20 @@ public class LaraCroftMovement : MonoBehaviour
         inputReader.OnAimInput -= CamarasAimInput;
         inputReader.OnAttackInput -= HandleAttackInput;
     }
-    //------------Movement3D--------------
+
     private void Movement(Vector2 input)
     {
         movementInput = new Vector3(input.x, 0, input.y);
 
         bool isWalking = movementInput != Vector3.zero && !LaraIsRunning && !LaraisCrouching;
-        OnMovementAnimation?.Invoke(isWalking); // Events WalkAnimation
+        OnMovementAnimation?.Invoke(isWalking); 
 
         bool isCrouchWalking = LaraisCrouching && movementInput != Vector3.zero;
-        OnCrouchWalkingAnimation?.Invoke(isCrouchWalking); // Events CrounchedAnimation
+        OnCrouchWalkingAnimation?.Invoke(isCrouchWalking); 
 
         isMoving = movementInput != Vector3.zero;
     }
-    //------------Jump3D--------------
+
     private void Jumping()
     {
         if (isJumping || !isGrounded || LaraisCrouching || LaraIsAiming)
@@ -127,7 +126,7 @@ public class LaraCroftMovement : MonoBehaviour
         LaraAnimator.SetBool("LaraIsJumping", false); 
         LaraRigidbody.AddForce(Vector3.up * LarajumpForce, ForceMode.Impulse);
     }
-    //------------Run3D--------------
+
     private void Running(bool isRunning)
     {
         if (LaraisCrouching || LaraIsAiming) 
@@ -136,9 +135,9 @@ public class LaraCroftMovement : MonoBehaviour
         }
         LaraIsRunning = isRunning && movementInput != Vector3.zero;
 
-        OnRunningAnimation?.Invoke(LaraIsRunning); // Events RunAnimation
+        OnRunningAnimation?.Invoke(LaraIsRunning); 
     }
-    //------------Crounched3D--------------
+
     private void Crouch()
     {
         if (LaraIsAiming)
@@ -156,7 +155,7 @@ public class LaraCroftMovement : MonoBehaviour
             OnCrouchAnimation?.Invoke(true); 
         }
     }
-    //------------Mouse3D--------------
+    
     private void MouseMovement(Vector2 lookInput)
     {
         mouseX = lookInput.x * mouseSensitivity * Time.deltaTime;
@@ -280,7 +279,7 @@ public class LaraCroftMovement : MonoBehaviour
         movement.y = LaraRigidbody.velocity.y;
         LaraRigidbody.velocity = movement;
     }
-    //-----RAYCAST-----
+
     private void CheckGroundStatus()
     {
         bool wasGrounded = isGrounded;

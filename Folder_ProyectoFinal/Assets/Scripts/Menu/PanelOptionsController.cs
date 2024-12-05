@@ -23,6 +23,10 @@ public class PanelOptionsController : MonoBehaviour
     public Slider musicSlider;
     public Slider sfxSlider;
 
+    [Header("Camera Sensitivity")]
+    [SerializeField] private LaraCroftMovement movement;
+    public Slider sensitivitySlider;
+
     private static float currentBrillo = 1f;
     private static float currentMasterVolume = 0.6f;
     private static float currentMusicVolume = 0.6f;
@@ -52,6 +56,12 @@ public class PanelOptionsController : MonoBehaviour
         musicSlider.onValueChanged.AddListener(SetMusicVolume);
         sfxSlider.onValueChanged.AddListener(SetSFXVolume);
 
+        if (sensitivitySlider != null && movement != null)
+        {
+            sensitivitySlider.value = movement.mouseSensitivity;
+            sensitivitySlider.onValueChanged.AddListener(SetSensitivity);
+
+        }
         unmuteMasterButton.gameObject.SetActive(false);
         unmuteMusicButton.gameObject.SetActive(false);
         unmuteSFXButton.gameObject.SetActive(false);
@@ -76,7 +86,6 @@ public class PanelOptionsController : MonoBehaviour
         AudioManager.OnSFXUnmute -= SFXUnmute;
     }
 
-
     public void ShowPanelOptions()
     {
         isOptionsVisible = !isOptionsVisible;
@@ -98,6 +107,14 @@ public class PanelOptionsController : MonoBehaviour
         Color color = brightness.color;
         color.a = 1f - brillo;
         brightness.color = color;
+    }
+
+    private void SetSensitivity(float sensitivity)
+    {
+        if (movement != null)
+        {
+            movement.mouseSensitivity = sensitivity;
+        }
     }
 
     private void SetMasterVolume(float volume)
@@ -187,5 +204,9 @@ public class PanelOptionsController : MonoBehaviour
         masterSlider.onValueChanged.RemoveListener(SetMasterVolume);
         musicSlider.onValueChanged.RemoveListener(SetMusicVolume);
         sfxSlider.onValueChanged.RemoveListener(SetSFXVolume);
+        if (sensitivitySlider != null)
+        {
+            sensitivitySlider.onValueChanged.RemoveListener(SetSensitivity);
+        }
     }
 }
