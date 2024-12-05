@@ -67,4 +67,8 @@ public class LaraCroftAnimations : MonoBehaviour
     {
         animator.SetTrigger("LaraShootBow");
     }
+    public void PlayDieAnimation()
+    {
+        animator.SetTrigger("LaraDie"); 
+    }
 }
