@@ -12,6 +12,7 @@ public class LaraCroftAnimations : MonoBehaviour
     private void OnEnable()
     {
         LaraCroftMovement playerMovement = GetComponent<LaraCroftMovement>();
+        LaraCroftHealth playerLife = GetComponent<LaraCroftHealth>();
         playerMovement.OnMovementAnimation += WalkingAnimation;
         playerMovement.OnJumpingAnimation += JumpAnimation;
         playerMovement.OnRunningAnimation += RunningAnimation;
@@ -19,11 +20,13 @@ public class LaraCroftAnimations : MonoBehaviour
         playerMovement.OnCrouchWalkingAnimation += CrouchWalkingAnimation;
         playerMovement.OnBowAimAnimation += BowAimAnimation;
         playerMovement.OnBowShootAnimation += BowShootAnimation;
+        playerLife.OnDieAnimation += PlayDieAnimation;
     }
 
     private void OnDisable()
     {
         LaraCroftMovement playerMovement = GetComponent<LaraCroftMovement>();
+        LaraCroftHealth playerLife = GetComponent<LaraCroftHealth>();
         playerMovement.OnMovementAnimation -= WalkingAnimation;
         playerMovement.OnJumpingAnimation -= JumpAnimation;
         playerMovement.OnRunningAnimation -= RunningAnimation;
@@ -31,6 +34,7 @@ public class LaraCroftAnimations : MonoBehaviour
         playerMovement.OnCrouchWalkingAnimation -= CrouchWalkingAnimation;
         playerMovement.OnBowAimAnimation -= BowAimAnimation;
         playerMovement.OnBowShootAnimation -= BowShootAnimation;
+        playerLife.OnDieAnimation -= PlayDieAnimation;
     }
 
     private void WalkingAnimation(bool isWalking)

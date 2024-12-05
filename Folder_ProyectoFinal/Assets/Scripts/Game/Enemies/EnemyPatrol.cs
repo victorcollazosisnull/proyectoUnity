@@ -185,7 +185,7 @@ public class EnemyPatrol : MonoBehaviour
         {
             OnPlayerDamage.Invoke(1f);  
         }
-        Invoke("EndAttack", 0.1f);
+        Invoke("EndAttack", 3f);
     }
     private void OnAttackHit()
     {

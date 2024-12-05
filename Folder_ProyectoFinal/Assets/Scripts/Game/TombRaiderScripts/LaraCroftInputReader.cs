@@ -108,6 +108,7 @@ public class LaraCroftInputReader : MonoBehaviour
     }
     public void ReadPause(InputAction.CallbackContext context)
     {
+        if (isInputBlocked) return;
         if (context.performed)
         {
             OnPauseInput?.Invoke();

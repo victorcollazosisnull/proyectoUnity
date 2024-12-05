@@ -131,10 +131,12 @@ MonoBehaviour:
   patrolSpeed: 1
   detectionRadius: 5
   stopChaseRadius: 7
+  attackRadius: 1.5
   player: {fileID: 0}
   initialSpeed: 4
   maxSpeed: 10
   acceleration: 0.5
+  minAttackDistance: 1
 --- !u!135 &2052638819460814514
 SphereCollider:
   m_ObjectHideFlags: 0
