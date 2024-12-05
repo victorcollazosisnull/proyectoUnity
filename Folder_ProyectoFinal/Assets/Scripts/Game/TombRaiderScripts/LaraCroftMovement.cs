@@ -61,8 +61,8 @@ public class LaraCroftMovement : MonoBehaviour
     public LineRenderer lineRenderer;
     public int resolution = 30;
     public float gravity = -9.81f;
-    private bool isAiming;
-    private Vector3 launchDirection;
+    public bool isAiming;
+    public Vector3 launchDirection;
 
     void Awake()
     {
@@ -170,7 +170,7 @@ public class LaraCroftMovement : MonoBehaviour
         {
             
         }
-        if (isAiming && LaraHasBow)
+        if (LaraIsAiming && LaraHasBow)
         {
             CalculateDirection();
             ShowTrayectory();
@@ -244,11 +244,11 @@ public class LaraCroftMovement : MonoBehaviour
         LaraHasBow = hasBow;
         if (hasBow)
         {
-            Debug.Log("Lara ahora tiene el arco .");
+            Debug.Log("Lara ahora tiene el arco");
         }
         else
         {
-            Debug.Log("Lara DEJO de usar el arco.");
+            Debug.Log("Lara DEJO de usar el arco");
         }
     }
     private void Jump()
@@ -295,6 +295,7 @@ public class LaraCroftMovement : MonoBehaviour
             LaraAnimator.SetBool("LaraIsJumping", true);
         }
     }
+
     private void CamarasAimInput(bool isAiming)
     {
         if (isAiming)
@@ -308,10 +309,7 @@ public class LaraCroftMovement : MonoBehaviour
             aimCamera.Priority = 1;
         }
     }
-    public void SetAnimationState(string animationName, bool state)
-    {
-        LaraAnimator.SetBool(animationName, state);
-    }
+
     public void StopMovement()
     {
         canMove = false;
