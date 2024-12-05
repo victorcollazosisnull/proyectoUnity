@@ -16,6 +16,7 @@ public class LaraCroftInputReader : MonoBehaviour
     public event Action<bool> OnAimInput;
     public event Action<float> OnMouseWheelInput;
     public event Action OnAttackInput;
+    public event Action OnPauseInput;
     public void BlockInputs(bool block)
     {
         isInputBlocked = block;
@@ -103,6 +104,13 @@ public class LaraCroftInputReader : MonoBehaviour
         if (context.performed)
         {
             OnAttackInput?.Invoke();
+        }
+    }
+    public void ReadPause(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            OnPauseInput?.Invoke();
         }
     }
 }

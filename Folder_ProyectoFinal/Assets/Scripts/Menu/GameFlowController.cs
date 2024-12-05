@@ -6,8 +6,11 @@ using Cinemachine;
 
 public class GameFlowController : MonoBehaviour
 {
+    private bool isGameActived;
+
     public static event Action OnMenuExited;
     public static event Action OnGameStarted;
+    public static event Action OnGamePaused;
 
     [SerializeField] private LaraCroftInputReader InputReader;
     public Animator playerAnimator;
@@ -39,10 +42,16 @@ public class GameFlowController : MonoBehaviour
         canvasGame.SetActive(false);
 
         InputReader.BlockInputs(true);
-    }
 
+        InputReader.OnPauseInput += HandlePauseInput;
+    }
+    private void OnDestroy()
+    {
+        InputReader.OnPauseInput -= HandlePauseInput; 
+    }
     public void OnPlayButton()
     {
+        isGameActived = true;
         StartCoroutine(TransitionToGameplay());
     }
 
@@ -71,24 +80,37 @@ public class GameFlowController : MonoBehaviour
     public void OnOptionsButton()
     {
         panelOptionsController.ShowPanelOptions();
+        canvasMenu.SetActive(false);
         ToggleCamera(shipCamera);
     }
 
     public void OnCreditsButton()
     {
         panelCreditsController.ToggleCreditsPanel();
+        canvasMenu.SetActive(false);
         ToggleCamera(shipCamera);
     }
 
     public void OnExitOptions()
     {
-        panelOptionsController.ShowPanelOptions(); 
-        ToggleCamera(menuCamera);
+        if (!isGameActived)
+        {
+            panelOptionsController.ShowPanelOptions();
+            canvasMenu.SetActive(true);
+            ToggleCamera(menuCamera);
+        }
+        else if (isGameActived)
+        {
+            panelOptionsController.ShowPanelOptions();
+            canvasMenu.SetActive(false);
+            canvasGame.SetActive(true);
+        }
     }
 
     public void OnExitCredits()
     {
         panelCreditsController.ToggleCreditsPanel();
+        canvasMenu.SetActive(true);
         ToggleCamera(menuCamera);
     }
 
@@ -99,5 +121,50 @@ public class GameFlowController : MonoBehaviour
         shipCamera.Priority = 0;
 
         targetCamera.Priority = 10;
+    }
+    private void HandlePauseInput()
+    {
+        if (!isGameActived) return; 
+
+        if (PanelOptionsController.isGamePaused)
+        {
+            ResumeGame();
+        }
+        else
+        {
+            PauseGame();
+        }
+    }
+
+    private void PauseGame()
+    {
+        if (isGameActived)
+        {
+            PanelOptionsController.isGamePaused = true;
+            Time.timeScale = 0f;
+
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+
+            canvasGame.SetActive(false);
+            panelOptionsController.ShowPanelOptions();
+        }
+    }
+
+    public void ResumeGame()
+    {
+        if (isGameActived)
+        {
+            PanelOptionsController.isGamePaused = false;
+            Time.timeScale = 1f;
+
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+
+            canvasGame.SetActive(true);
+            canvasMenu.SetActive(false);
+
+            panelOptionsController.HidePanelOptions();
+        }
     }
 }

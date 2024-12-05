@@ -92,12 +92,12 @@ public class PanelOptionsController : MonoBehaviour
 
         if (isOptionsVisible)
         {
-            optionsPanel.DOAnchorPos(visiblePosition, moveDuration).SetEase(Ease.OutCubic);
+            optionsPanel.DOAnchorPos(visiblePosition, moveDuration).SetEase(Ease.OutCubic).SetUpdate(true); 
             optionsPanel.SetAsLastSibling();
         }
         else
         {
-            optionsPanel.DOAnchorPos(hiddenPosition, moveDuration).SetEase(Ease.InCubic);
+            optionsPanel.DOAnchorPos(hiddenPosition, moveDuration).SetEase(Ease.InCubic).SetUpdate(true); 
         }
     }
 
@@ -197,6 +197,26 @@ public class PanelOptionsController : MonoBehaviour
     public void OnUnmuteSFXPressed()
     {
         AudioManager.instance.UnmuteSFXVolume();
+    }
+    public void TogglePause()
+    {
+        isGamePaused = !isGamePaused;
+
+        if (isGamePaused)
+        {
+            Time.timeScale = 0;
+            ShowPanelOptions(); 
+        }
+        else
+        {
+            Time.timeScale = 1;
+            HidePanelOptions();
+        }
+    }
+    public void HidePanelOptions()
+    {
+        isOptionsVisible = false;
+        optionsPanel.DOAnchorPos(hiddenPosition, moveDuration).SetEase(Ease.InCubic).SetUpdate(true); 
     }
     private void OnDestroy()
     {
