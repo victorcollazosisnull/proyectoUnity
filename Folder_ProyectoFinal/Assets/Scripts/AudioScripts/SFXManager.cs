@@ -4,23 +4,12 @@ using UnityEngine.VFX;
 
 public class SFXManager : MonoBehaviour
 {
-    public static SFXManager Instance { get; private set; }
     private AudioSource audioSource;
     public AudioClipsSO walkSoundData;
-    public AudioClipsSO runSoundData;
 
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-            audioSource = gameObject.AddComponent<AudioSource>();
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        audioSource = GetComponent<AudioSource>(); 
     }
 
     private void ConfigureAudioSource(AudioClipsSO clipData)
@@ -35,12 +24,6 @@ public class SFXManager : MonoBehaviour
     public void PlayWalkingSound()
     {
         ConfigureAudioSource(walkSoundData);
-        audioSource.Play();
-    }
-
-    public void PlayRunningSound()
-    {
-        ConfigureAudioSource(runSoundData);
         audioSource.Play();
     }
 

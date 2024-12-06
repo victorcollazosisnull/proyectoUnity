@@ -29,7 +29,6 @@ public class ExitConfirmationPanelController : MonoBehaviour
         }
         else
         {
-            canvasMenu.SetActive(true);
             confirmationPanel.DOAnchorPos(hiddenPosition, moveDuration).SetEase(Ease.InCubic);
         }
     }
@@ -42,5 +41,11 @@ public class ExitConfirmationPanelController : MonoBehaviour
     public void CancelExit()
     {
         ToggleConfirmationPanel();
+        StartCoroutine(ActivateMenuAfterDelay(1f));
+    }
+    private IEnumerator ActivateMenuAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        canvasMenu.SetActive(true);
     }
 }

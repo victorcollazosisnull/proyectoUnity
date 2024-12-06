@@ -258,7 +258,7 @@ public class LaraCroftMovement : MonoBehaviour
     private void RotateCamera()
     {
         xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -10f, 20f);
+        xRotation = Mathf.Clamp(xRotation, -10f, 30f);
         cameraTransform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         transform.Rotate(Vector3.up * mouseX);
     }
@@ -307,10 +307,7 @@ public class LaraCroftMovement : MonoBehaviour
             aimCamera.Priority = 1;
         }
     }
-    public void SetAnimationState(string animationName, bool state)
-    {
-        LaraAnimator.SetBool(animationName, state);
-    }
+
     public void StopMovement()
     {
         canMove = false;

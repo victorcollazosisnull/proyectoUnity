@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Cinemachine;
+using UnityEngine.Audio;
 
 public class GameFlowController : MonoBehaviour
 {
@@ -29,6 +30,15 @@ public class GameFlowController : MonoBehaviour
     [Header("Panel Credits")]
     [SerializeField] private PanelCreditsController panelCreditsController;
 
+    [Header("Panel Help")]
+    [SerializeField] private PanelHelpController panelHelpController;
+
+    [Header("Audio Settings")]
+    [SerializeField] private AudioClipsSO menuMusicClip; 
+    [SerializeField] private AudioClipsSO gameMusicClip; 
+    [SerializeField] private AudioSource audioSource; 
+    [SerializeField] private AudioMixerGroup musicMixerGroup;
+
     private void Start()
     {
         Cursor.lockState = CursorLockMode.None;
@@ -44,6 +54,12 @@ public class GameFlowController : MonoBehaviour
         InputReader.BlockInputs(true);
 
         InputReader.OnPauseInput += HandlePauseInput;
+
+        audioSource.clip = menuMusicClip.clip;
+        audioSource.volume = menuMusicClip.volume;
+        audioSource.pitch = menuMusicClip.pitch;
+        audioSource.outputAudioMixerGroup = musicMixerGroup;
+        audioSource.Play();
     }
     private void OnDestroy()
     {
@@ -53,12 +69,22 @@ public class GameFlowController : MonoBehaviour
     {
         isGameActived = true;
         StartCoroutine(TransitionToGameplay());
+        ChangeMusicToGame();
     }
+    private void ChangeMusicToGame()
+    {
+        audioSource.Stop();
 
+        audioSource.clip = gameMusicClip.clip;
+        audioSource.volume = gameMusicClip.volume;
+        audioSource.pitch = gameMusicClip.pitch;
+        audioSource.outputAudioMixerGroup = musicMixerGroup;
+        audioSource.Play();
+    }
     private IEnumerator TransitionToGameplay()
     {
         OnMenuExited?.Invoke();
-
+        InputReader.BlockInputs(true);
         playerAnimator.SetTrigger("SitToSitUp");
 
         yield return new WaitForSeconds(transitionTime);
@@ -90,14 +116,19 @@ public class GameFlowController : MonoBehaviour
         canvasMenu.SetActive(false);
         ToggleCamera(shipCamera);
     }
-
+    public void OnHelpButton()
+    {
+        panelHelpController.ToggleHelpPanel();
+        canvasMenu.SetActive(false);
+        ToggleCamera(shipCamera);
+    }
     public void OnExitOptions()
     {
         if (!isGameActived)
         {
             panelOptionsController.ShowPanelOptions();
-            canvasMenu.SetActive(true);
             ToggleCamera(menuCamera);
+            StartCoroutine(ActivateMenuAfterDelay(1f));
         }
         else if (isGameActived)
         {
@@ -110,10 +141,20 @@ public class GameFlowController : MonoBehaviour
     public void OnExitCredits()
     {
         panelCreditsController.ToggleCreditsPanel();
-        canvasMenu.SetActive(true);
         ToggleCamera(menuCamera);
+        StartCoroutine(ActivateMenuAfterDelay(1f));
     }
-
+    public void OnExitHelp()
+    {
+        panelHelpController.ToggleHelpPanel();
+        ToggleCamera(menuCamera);
+        StartCoroutine(ActivateMenuAfterDelay(1f));
+    }
+    private IEnumerator ActivateMenuAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay); 
+        canvasMenu.SetActive(true);
+    }
     private void ToggleCamera(CinemachineVirtualCamera targetCamera)
     {
         menuCamera.Priority = 0;

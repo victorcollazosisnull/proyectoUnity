@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dec7751578f68934aa61e736f871f4ec, type: 3}
   m_Name: NPCDialogue
   m_EditorClassIdentifier: 
-  dialogueText: 'hola v:'
+  dialogueText: como estas

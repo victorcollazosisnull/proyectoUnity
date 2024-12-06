@@ -3,25 +3,14 @@ using UnityEngine.Audio;
 
 public class MusicManager : MonoBehaviour
 {
-    public static MusicManager Instance { get; private set; }
     public AudioClipsSO menuMusicData;
     public AudioClipsSO gameMusicData;
     private AudioSource audioSource;
 
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-            audioSource = gameObject.AddComponent<AudioSource>();
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        audioSource = GetComponent<AudioSource>();
     }
-
     private void Start()
     {
         PlayMenuMusic();

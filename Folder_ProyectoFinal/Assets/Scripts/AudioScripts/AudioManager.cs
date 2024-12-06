@@ -5,9 +5,8 @@ using System;
 public class AudioManager : MonoBehaviour
 {
     [Header("AudioManager Settings")]
-    public static AudioManager instance;
     public AudioMixer audioMixer;
-
+    private AudioSource audioSource;
     private static bool isMasterMuted = false;
     private static bool isMusicMuted = false;
     private static bool isSFXMuted = false;
@@ -22,21 +21,10 @@ public class AudioManager : MonoBehaviour
     public static event Action OnMusicUnmute;
     public static event Action OnSFXMute;
     public static event Action OnSFXUnmute;
-
     private void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject); 
-            LoadAudioSettings();
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        audioSource = GetComponent<AudioSource>();
     }
-
     private void Start()
     {
         LoadAudioSettings();

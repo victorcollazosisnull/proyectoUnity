@@ -22,7 +22,8 @@ public class PanelOptionsController : MonoBehaviour
     public Slider masterSlider;
     public Slider musicSlider;
     public Slider sfxSlider;
-
+    [Header("Audio Manager Reference")]
+    [SerializeField] private AudioManager audioManager;
     [Header("Camera Sensitivity")]
     [SerializeField] private LaraCroftMovement movement;
     public Slider sensitivitySlider;
@@ -120,19 +121,19 @@ public class PanelOptionsController : MonoBehaviour
     private void SetMasterVolume(float volume)
     {
         currentMasterVolume = volume;
-        AudioManager.instance.SetMasterVolume(volume);
+        audioManager.SetMasterVolume(volume);
     }
 
     private void SetMusicVolume(float volume)
     {
         currentMusicVolume = volume;
-        AudioManager.instance.SetMusicVolume(volume);
+        audioManager.SetMusicVolume(volume);
     }
 
     private void SetSFXVolume(float volume)
     {
         currentSFXVolume = volume;
-        AudioManager.instance.SetSFXVolume(volume);
+        audioManager.SetSFXVolume(volume);
     }
     private void MasterMute()
     {
@@ -171,32 +172,32 @@ public class PanelOptionsController : MonoBehaviour
     }
     public void OnMuteMasterPressed()
     {
-        AudioManager.instance.MuteMasterVolume();
+        audioManager.MuteMasterVolume();
     }
 
     public void OnUnmuteMasterPressed()
     {
-        AudioManager.instance.UnmuteMasterVolume();
+        audioManager.UnmuteMasterVolume();
     }
 
     public void OnMuteMusicPressed()
     {
-        AudioManager.instance.MuteMusicVolume();
+        audioManager.MuteMusicVolume();
     }
 
     public void OnUnmuteMusicPressed()
     {
-        AudioManager.instance.UnmuteMusicVolume();
+        audioManager.UnmuteMusicVolume();
     }
 
     public void OnMuteSFXPressed()
     {
-        AudioManager.instance.MuteSFXVolume();
+        audioManager.MuteSFXVolume();
     }
 
     public void OnUnmuteSFXPressed()
     {
-        AudioManager.instance.UnmuteSFXVolume();
+        audioManager.UnmuteSFXVolume();
     }
     public void TogglePause()
     {

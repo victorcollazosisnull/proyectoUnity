@@ -9,11 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22a632a989ba98a478dfe3d264319aef, type: 3}
-  m_Name: MusicGame
+  m_Script: {fileID: 11500000, guid: dec7751578f68934aa61e736f871f4ec, type: 3}
+  m_Name: NPCDialogue 6
   m_EditorClassIdentifier: 
-  clip: {fileID: 8300000, guid: 7e11f300ad14b86489ddc69d171500d0, type: 3}
-  mixerGroup: {fileID: -4999895819225476574, guid: cf372475021e9cb409299c03cfe99af1,
-    type: 2}
-  volume: 1
-  pitch: 1
+  dialogueText: q paso

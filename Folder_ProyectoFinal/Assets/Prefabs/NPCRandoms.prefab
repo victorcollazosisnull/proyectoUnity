@@ -1152,6 +1152,8 @@ GameObject:
   - component: {fileID: 402892535654900551}
   - component: {fileID: 3345991440273288933}
   - component: {fileID: 950706225975069564}
+  - component: {fileID: 2086818353993045963}
+  - component: {fileID: 8846948552198301774}
   m_Layer: 0
   m_Name: NPCRandoms
   m_TagString: Untagged
@@ -1213,7 +1215,7 @@ MonoBehaviour:
   player: {fileID: 0}
   isMainNPC: 0
   dialogueManager: {fileID: 0}
-  dialogueData: {fileID: 0}
+  nPCDialogue: {fileID: 0}
 --- !u!135 &3345991440273288933
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1256,6 +1258,54 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!54 &2086818353993045963
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2591161860094282268}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &8846948552198301774
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2591161860094282268}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 45.69, y: 180.405, z: 37.523678}
+  m_Center: {x: -7.2368445e-11, y: 90.68152, z: -0.4168249}
 --- !u!1 &2724754212848763165
 GameObject:
   m_ObjectHideFlags: 0
