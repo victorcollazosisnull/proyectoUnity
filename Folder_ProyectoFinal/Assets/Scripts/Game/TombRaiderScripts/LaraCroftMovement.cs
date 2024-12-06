@@ -61,7 +61,6 @@ public class LaraCroftMovement : MonoBehaviour
     public LineRenderer lineRenderer;
     public int resolution = 30;
     public float gravity = -9.81f;
-    private bool isAiming;
     private Vector3 launchDirection;
 
     void Awake()
@@ -170,7 +169,7 @@ public class LaraCroftMovement : MonoBehaviour
         {
             
         }
-        if (isAiming && LaraHasBow)
+        if (LaraIsAiming && LaraHasBow)
         {
             CalculateDirection();
             ShowTrayectory();
@@ -211,7 +210,7 @@ public class LaraCroftMovement : MonoBehaviour
             rb.velocity = launchDirection * forceBow;
             flecha.transform.rotation = Quaternion.LookRotation(launchDirection);
         }
-        isAiming = false;
+        LaraIsAiming = false;
     }
 
     private void CalculateDirection()
