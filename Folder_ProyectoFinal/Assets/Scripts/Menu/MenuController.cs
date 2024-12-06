@@ -3,8 +3,8 @@ using UnityEngine.SceneManagement;
 
 public class MenuController : MonoBehaviour
 {
-    public GameFlowController gameFlowController; 
-
+    public GameFlowController gameFlowController;
+    public ExitConfirmationPanelController confirmationPanelController;
     public void PlayGame()
     {
         gameFlowController.OnPlayButton();
@@ -12,9 +12,8 @@ public class MenuController : MonoBehaviour
 
     public void QuitGame()
     {
-        Application.Quit();
+        confirmationPanelController.ToggleConfirmationPanel();
     }
-
     public void OptionsButton()
     {
         gameFlowController.OnOptionsButton();
