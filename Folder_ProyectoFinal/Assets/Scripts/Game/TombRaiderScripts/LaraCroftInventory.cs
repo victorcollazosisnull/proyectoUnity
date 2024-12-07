@@ -14,7 +14,9 @@ public class LaraCroftInventory : MonoBehaviour
     private float scrollSensitivity = 0.1f;
 
     [Header("References")]
-    public GameObject bow; 
+    public GameObject bow;
+    public GameObject potion;
+    public GameObject kit;
     private LaraCroftMovement laraMovement;
 
     void Start()
@@ -83,7 +85,7 @@ public class LaraCroftInventory : MonoBehaviour
         currentBox = currentBox.Next;
         HighlightCurrentBox();
 
-        CheckForBow();
+        CheckForItem();
     }
 
     private void MoveToPreviousBox()
@@ -96,7 +98,7 @@ public class LaraCroftInventory : MonoBehaviour
         currentBox = currentBox.Previous;
         HighlightCurrentBox();
 
-        CheckForBow();
+        CheckForItem();
     }
 
     private void HighlightCurrentBox()
@@ -109,19 +111,62 @@ public class LaraCroftInventory : MonoBehaviour
         currentBox.Value.transform.localScale = originalScaleBoxes;
     }
 
-    private void CheckForBow() // switch for more items
+    private void CheckForItem() 
     {
         if (bow == null || laraMovement == null) return;
 
-        if (currentBox.Value.sprite != null && currentBox.Value.sprite.name == "arrow") 
+        if (currentBox.Value.sprite != null && currentBox.Value.sprite.name == "arrow")
         {
             bow.SetActive(true);
-            laraMovement.EquipBow(true); 
+            laraMovement.EquipBow(true);
+            potion.SetActive(false);
+            kit.SetActive(false);
+        }
+
+        else if (currentBox.Value.sprite != null && currentBox.Value.sprite.name == "Potion")
+        {
+            UsePotion();
+        }
+
+        else if (currentBox.Value.sprite != null && currentBox.Value.sprite.name == "kit")
+        {
+            UseKit();
+        }
+
+        else if (currentBox.Value.sprite != null && currentBox.Value.sprite.name == "Torch")
+        {
+            EquipTorch();
         }
         else
         {
             bow.SetActive(false);
-            laraMovement.EquipBow(false); 
+            laraMovement.EquipBow(false);
+            potion.SetActive(false);
+            kit.SetActive(false);
         }
+    }
+
+    private void UsePotion()
+    {
+        potion.SetActive(true);
+        laraMovement.EquipBow(false);
+        bow.SetActive(false);
+        kit.SetActive(false);
+        Debug.Log("poción...");
+        
+    }
+
+    private void UseKit()
+    {
+        kit.SetActive(true);
+        laraMovement.EquipBow(false);
+        bow.SetActive(false);
+        potion.SetActive(false);
+        Debug.Log("kit...");
+    }
+
+    private void EquipTorch()
+    {
+        Debug.Log("linterna...");
     }
 }

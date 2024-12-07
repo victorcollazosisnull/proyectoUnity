@@ -31,5 +31,9 @@ public class ArrowController : MonoBehaviour
             }
             Destroy(this.gameObject); 
         }
+        else if (collision.gameObject.CompareTag("destroy"))
+        {
+            Destroy(this.gameObject);
+        }
     }
 }

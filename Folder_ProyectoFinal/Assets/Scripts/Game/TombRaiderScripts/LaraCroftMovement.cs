@@ -128,13 +128,20 @@ public class LaraCroftMovement : MonoBehaviour
 
     private void Running(bool isRunning)
     {
-        if (LaraisCrouching || LaraIsAiming) 
+        if (LaraisCrouching || LaraIsAiming || movementInput == Vector3.zero)
         {
-            isRunning = false;
+            LaraIsRunning = false;
         }
-        LaraIsRunning = isRunning && movementInput != Vector3.zero;
-
-        OnRunningAnimation?.Invoke(LaraIsRunning); 
+        else if (isRunning && movementInput != Vector3.zero)
+        {
+            LaraIsRunning = true;
+        }
+        else
+        {
+            LaraIsRunning = false;
+        }
+        OnRunningAnimation?.Invoke(LaraIsRunning);
+        LaraAnimator.SetBool("LaraIsRunning", LaraIsRunning);
     }
 
     private void Crouch()
