@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 1ee8e51a3a6746f459fa0f1d2d04bede
+guid: f98b97fde43cc7c45942947ef9bd17c9
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - Ojuju
+  - Rubik Mono One
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

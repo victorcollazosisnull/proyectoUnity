@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 2e88b928388afa24781f8f1d8c7f8b1d
+guid: 0f0c33ba037e5bf47a36fc78e4f052ff
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - Ojuju
+  - Bruce Forever
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

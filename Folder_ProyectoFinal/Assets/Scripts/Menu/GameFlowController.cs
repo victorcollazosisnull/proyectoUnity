@@ -68,6 +68,7 @@ public class GameFlowController : MonoBehaviour
     public void OnPlayButton()
     {
         isGameActived = true;
+        canvasMenu.SetActive(false);
         StartCoroutine(TransitionToGameplay());
         ChangeMusicToGame();
     }

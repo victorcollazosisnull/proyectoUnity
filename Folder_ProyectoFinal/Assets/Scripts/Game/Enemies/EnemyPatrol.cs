@@ -24,12 +24,14 @@ public class EnemyPatrol : MonoBehaviour
     private NodoControl currentNode;
     private Vector3 positionToMove;
     private bool isChasing = false;
+    private bool isPatrolling = true;
     [Header("Attack Settings")]
     public float minAttackDistance = 1.0f;
 
     private void Awake()
     {
-        animator = GetComponent<Animator>(); 
+        animator = GetComponent<Animator>();
+        EnemieLife.OnDeath += StopPatrolling;
     }
     private void Update()
     {
@@ -43,7 +45,10 @@ public class EnemyPatrol : MonoBehaviour
             Patrol();
         }
     }
-
+    private void OnDestroy()
+    {
+        EnemieLife.OnDeath -= StopPatrolling;
+    }
     public void SetInitialNode(NodoControl initialNode)
     {
         currentNode = initialNode;
@@ -69,7 +74,10 @@ public class EnemyPatrol : MonoBehaviour
 
         CheckPlayerDistance();
     }
-
+    private void StopPatrolling()
+    {
+        isPatrolling = false;  
+    }
     private void MoveToNextNode()
     {
         AdjacentNodeInfo nextNode = currentNode.GetRandomAdjacentNode();
@@ -107,14 +115,14 @@ public class EnemyPatrol : MonoBehaviour
     {
         isChasing = false;
         chaseTime = 0f; 
-        currentChaseSpeed = initialSpeed; 
+        currentChaseSpeed = initialSpeed;
         SetNewPosition(currentNode.transform.position);
     }
 
     private void ChasePlayer()
     {
         chaseTime += Time.deltaTime;
-        currentChaseSpeed = Mathf.Min(initialSpeed + acceleration * chaseTime, maxSpeed);
+        currentChaseSpeed = Mathf.Min(initialSpeed + Mathf.Pow(acceleration * chaseTime, 0.5f), maxSpeed);
 
         Vector3 directionToPlayer = new Vector3(player.position.x, transform.position.y, player.position.z) - transform.position;
 
@@ -188,6 +196,7 @@ public class EnemyPatrol : MonoBehaviour
         if (OnPlayerDamage != null)
         {
             OnPlayerDamage.Invoke(1f);
+            isAttacking = true;
             Debug.Log("me ataco");
         }
     }

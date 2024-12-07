@@ -2,13 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class EnemieLife : MonoBehaviour
 {
+    public static event Action OnDeath;
     public float maxHealth = 100f;
     public float currentHealth;
     public Slider healthSlider;
-
+    private Animator animator;
+    private void Awake()
+    {
+        animator = GetComponent<Animator>();
+    }
     private void Start()
     {
         currentHealth = maxHealth;
@@ -29,6 +35,13 @@ public class EnemieLife : MonoBehaviour
 
     private void Die()
     {
-        //Destroy(gameObject); 
+        animator.SetTrigger("Die");
+        StartCoroutine(WaitForDeathAnimation());
+    }
+
+    private IEnumerator WaitForDeathAnimation()
+    {
+        yield return new WaitForSeconds(2f);
+        Destroy(gameObject); 
     }
 }

@@ -135,20 +135,33 @@ public class NPCInteraction : MonoBehaviour
             npcAnimator.SetTrigger("Walk");
         }
         isInteracting = false;
+        npcMovement.isInteracting = false;
     }
     private DialogueNode BuildDialogueTree()
     {
-        var rootNode = new DialogueNode("NPC: hola te puedo preguntar algo");
-        var node2 = new DialogueNode("TOMB RAIDER: dime");
-        var node3 = new DialogueNode("NPC: Victor es el mas gozu?", "Sí", "Por supuesto");
-        var node4 = new DialogueNode("TOMB RAIDER: Obvio <3");
-        var node5 = new DialogueNode("TOMB RAIDER: como debe ser");
+        var rootNode = new DialogueNode("LARA: What happened here? This place looks abandoned... And those marks?");
+        var node2 = new DialogueNode("NPC: Traveler, leave while you can. This city isn’t safe.");
+        var node3 = new DialogueNode("LARA: I’m looking for an artifact buried nearby.");
+        var node4 = new DialogueNode("NPC: The Eye of Anubis? That cursed object caused all this.");
+        var node5 = new DialogueNode("LARA: Cursed? Sounds like a myth to me.");
+        var node6 = new DialogueNode("NPC: It’s real! It awakened the tomb guardians. They destroyed this village.");
+        var node7 = new DialogueNode("NPC: If you find it, will you use it? Risk unleashing its power?", "YES", "NO");
+        var node8 = new DialogueNode("LARA: I’m ready to use it.");
+        var node9 = new DialogueNode("NPC: Perhaps you’re destined to end this nightmare.");
+        var node10 = new DialogueNode("LARA: No, I don’t believe in myths. This isn’t worth it.");
+        var node11 = new DialogueNode("NPC: If you change your mind, the tomb awaits. Farewell.");
 
-        rootNode.SetYesNode(node2); 
-        node2.SetYesNode(node3);    
-        node3.SetYesNode(node4); 
-        node3.SetNoNode(node5);   
+        rootNode.SetYesNode(node2);
+        node2.SetYesNode(node3);
+        node3.SetYesNode(node4);
+        node4.SetYesNode(node5);
+        node5.SetYesNode(node6);
+        node6.SetYesNode(node7);
+        node7.SetYesNode(node8);
+        node7.SetNoNode(node10);
+        node8.SetYesNode(node9);
+        node10.SetYesNode(node11);
 
-        return rootNode; 
+        return rootNode;
     }
 }

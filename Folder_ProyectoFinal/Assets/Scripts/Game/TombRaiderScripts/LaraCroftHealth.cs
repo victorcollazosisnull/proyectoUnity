@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LaraCroftHealth : MonoBehaviour
@@ -31,6 +29,7 @@ public class LaraCroftHealth : MonoBehaviour
 
         if (currentHealth == 0)
         {
+            Debug.Log("mori porque toy bugeado");
             PlayDieAnimation();  
         }
     }
