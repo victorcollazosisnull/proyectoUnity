@@ -13,22 +13,13 @@ public class BarLifePlayerUI : MonoBehaviour
     public Color colorAmarillo = Color.yellow;
     public Color colorRojo = Color.red;
 
-    private void OnEnable()
-    {
-        EnemyPatrol.OnPlayerDamage += RestarVida;
-    }
 
-    private void OnDisable()
+    public void RestarVida(float vidaRestante)
     {
-        EnemyPatrol.OnPlayerDamage -= RestarVida;
-    }
-
-    public void RestarVida(float damageAmount)
-    {
-        currentLife -= damageAmount;
+        currentLife = vidaRestante; 
         if (currentLife < 0)
         {
-            currentLife = 0; 
+            currentLife = 0;
         }
 
         bar.fillAmount = currentLife / maxLife;

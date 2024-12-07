@@ -36,6 +36,7 @@ public class EnemieLife : MonoBehaviour
     private void Die()
     {
         animator.SetTrigger("Die");
+        OnDeath?.Invoke();
         StartCoroutine(WaitForDeathAnimation());
     }
 

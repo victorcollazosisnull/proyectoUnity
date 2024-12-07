@@ -193,11 +193,16 @@ public class EnemyPatrol : MonoBehaviour
 
     private void OnAttackHit()
     {
-        if (OnPlayerDamage != null)
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+        if (distanceToPlayer <= attackRadius) 
         {
-            OnPlayerDamage.Invoke(1f);
-            isAttacking = true;
+            OnPlayerDamage?.Invoke(1f);
             Debug.Log("me ataco");
+        }
+        else
+        {
+            EndAttack(); 
         }
     }
     private void EndAttack()

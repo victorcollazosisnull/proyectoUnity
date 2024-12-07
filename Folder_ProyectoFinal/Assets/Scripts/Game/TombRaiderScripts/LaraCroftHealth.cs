@@ -1,4 +1,6 @@
+using Unity.VisualScripting;
 using UnityEngine;
+using System.Collections;
 
 public class LaraCroftHealth : MonoBehaviour
 {
@@ -6,6 +8,22 @@ public class LaraCroftHealth : MonoBehaviour
     public float currentHealth = 8f;
     public BarLifePlayerUI healthBar;
     private LaraCroftAnimations animations;
+    private LaraCroftInputReader inputReader;
+    private LaraCroftMovement movement;
+
+    private bool isInvulnerable = false; 
+    public float invulnerabilityTime = 0.5f; 
+
+    private void Awake()
+    {
+        inputReader = GetComponent<LaraCroftInputReader>();
+        animations = GetComponent<LaraCroftAnimations>();
+        movement = GetComponent<LaraCroftMovement>();
+        if (currentHealth <= 0)
+        {
+            currentHealth = maxHealth;
+        }
+    }
 
     private void OnEnable()
     {
@@ -19,18 +37,26 @@ public class LaraCroftHealth : MonoBehaviour
 
     private void TakeDamage(float damageAmount)
     {
+        if (isInvulnerable) return;
+
         currentHealth -= damageAmount;
         if (currentHealth < 0)
         {
             currentHealth = 0;
         }
 
-        healthBar.RestarVida(currentHealth);  
+        healthBar.RestarVida(currentHealth);
 
         if (currentHealth == 0)
         {
-            Debug.Log("mori porque toy bugeado");
-            PlayDieAnimation();  
+            Debug.Log("mori");
+            PlayDieAnimation();
+            movement.StopMovement();
+            inputReader.BlockInputs(true);
+        }
+        else
+        {
+            StartCoroutine(InvulnerabilityCoroutine()); 
         }
     }
 
@@ -38,7 +64,7 @@ public class LaraCroftHealth : MonoBehaviour
     {
         if (other.gameObject.CompareTag("brazo"))
         {
-            TakeDamage(1f);  
+            TakeDamage(1f);
         }
     }
 
@@ -46,7 +72,14 @@ public class LaraCroftHealth : MonoBehaviour
     {
         if (animations != null)
         {
-            animations.PlayDieAnimation();  
+            animations.PlayDieAnimation();
         }
+    }
+
+    private IEnumerator InvulnerabilityCoroutine()
+    {
+        isInvulnerable = true;
+        yield return new WaitForSeconds(invulnerabilityTime);
+        isInvulnerable = false;
     }
 }
