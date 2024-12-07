@@ -28,13 +28,13 @@ public class BarLifePlayerUI : MonoBehaviour
         currentLife -= damageAmount;
         if (currentLife < 0)
         {
-            currentLife = 0;
+            currentLife = 0; 
         }
 
-        bar.fillAmount = currentLife / maxLife;  
-        circleUI.fillAmount = currentLife / maxLife;  
+        bar.fillAmount = currentLife / maxLife;
+        circleUI.fillAmount = currentLife / maxLife;
 
-        ActualizarColor();  
+        ActualizarColor();
     }
 
     public void ActualizarColor()

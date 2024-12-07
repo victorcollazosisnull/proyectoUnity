@@ -8,6 +8,7 @@ public class LaraCroftHealth : MonoBehaviour
     public float currentHealth = 8f;
     public BarLifePlayerUI healthBar;
     private LaraCroftAnimations animations;
+
     private void OnEnable()
     {
         EnemyPatrol.OnPlayerDamage += TakeDamage;
@@ -23,16 +24,14 @@ public class LaraCroftHealth : MonoBehaviour
         currentHealth -= damageAmount;
         if (currentHealth < 0)
         {
-            currentHealth = 0;  // La vida nunca debe ser menor que 0
+            currentHealth = 0;
         }
 
-        // Actualizar la barra de vida con el nuevo valor
-        healthBar.RestarVida(currentHealth);
+        healthBar.RestarVida(currentHealth);  
 
-        // Verificar si la vida llega a 0 para activar la animación de muerte
         if (currentHealth == 0)
         {
-            PlayDieAnimation();
+            PlayDieAnimation();  
         }
     }
 
@@ -40,7 +39,7 @@ public class LaraCroftHealth : MonoBehaviour
     {
         if (other.gameObject.CompareTag("brazo"))
         {
-            TakeDamage(currentHealth);
+            TakeDamage(1f);  
         }
     }
 
@@ -48,7 +47,7 @@ public class LaraCroftHealth : MonoBehaviour
     {
         if (animations != null)
         {
-            animations.PlayDieAnimation();
+            animations.PlayDieAnimation();  
         }
     }
 }

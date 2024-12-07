@@ -119,25 +119,25 @@ public class EnemyPatrol : MonoBehaviour
         Vector3 directionToPlayer = new Vector3(player.position.x, transform.position.y, player.position.z) - transform.position;
 
         float distanceToPlayer = directionToPlayer.magnitude;
-        if (distanceToPlayer > minAttackDistance)
+
+        if (distanceToPlayer <= minAttackDistance)
+        {
+            if (!isAttacking)  
+            {
+                StartAttack();  
+            }
+            transform.position = Vector3.MoveTowards(transform.position, transform.position, 0); 
+        }
+        else if (distanceToPlayer > minAttackDistance)
         {
             transform.position = Vector3.MoveTowards(transform.position, player.position, currentChaseSpeed * Time.deltaTime);
-        }
-        else
-        {
-            transform.position = Vector3.MoveTowards(transform.position, transform.position, 0);
         }
 
         LookAtMoveDirection(player.position);
 
-        if (distanceToPlayer < 1.5f) 
-        {
-            ResetChaseSpeed();
-        }
-
         if (distanceToPlayer > stopChaseRadius)
         {
-            StopChase();
+            StopChase(); 
         }
     }
     private void ResetChaseSpeed()
@@ -178,20 +178,17 @@ public class EnemyPatrol : MonoBehaviour
     {
         isAttacking = true;
         animator.SetTrigger("Attack");
+        isChasing = false;
 
-        isChasing = false; 
-
-        if (OnPlayerDamage != null)
-        {
-            OnPlayerDamage.Invoke(1f);  
-        }
-        Invoke("EndAttack", 0.1f);
+        Invoke("OnAttackHit", 0.5f); 
     }
+
     private void OnAttackHit()
     {
         if (OnPlayerDamage != null)
         {
-            OnPlayerDamage.Invoke(1f); 
+            OnPlayerDamage.Invoke(1f);
+            Debug.Log("me ataco");
         }
     }
     private void EndAttack()

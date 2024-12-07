@@ -250,11 +250,6 @@ public class LaraCroftMovement : MonoBehaviour
             Debug.Log("Lara DEJO de usar el arco.");
         }
     }
-    private void Jump()
-    {
-        LaraRigidbody.AddForce(Vector3.up * LarajumpForce, ForceMode.Impulse);
-    }
-
     private void RotateCamera()
     {
         xRotation -= mouseY;

@@ -87,10 +87,10 @@ public class GameFlowController : MonoBehaviour
         InputReader.BlockInputs(true);
         playerAnimator.SetTrigger("SitToSitUp");
 
-        yield return new WaitForSeconds(transitionTime);
-
         menuCamera.Priority = 0;
         gameplayCamera.Priority = 10;
+
+        yield return new WaitForSeconds(2f);
 
         canvasMenu.SetActive(false);
         canvasGame.SetActive(true);
@@ -98,9 +98,9 @@ public class GameFlowController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        OnGameStarted?.Invoke();
-
         InputReader.BlockInputs(false);
+
+        OnGameStarted?.Invoke();
     }
 
     public void OnOptionsButton()
