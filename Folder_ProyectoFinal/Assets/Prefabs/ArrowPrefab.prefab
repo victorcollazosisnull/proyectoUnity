@@ -128,6 +128,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bodyDamage: 20
   headshotDamage: 100
+  explosionEffectPrefab: {fileID: 1919247138715254427, guid: ccdd50e955cdf6f48a431e55f478c8bb,
+    type: 3}
 --- !u!65 &355016600097727454
 BoxCollider:
   m_ObjectHideFlags: 0

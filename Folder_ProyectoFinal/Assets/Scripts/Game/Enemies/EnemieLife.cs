@@ -33,7 +33,7 @@ public class EnemieLife : MonoBehaviour
         }
     }
 
-    private void Die()
+    public void Die()
     {
         animator.SetTrigger("Die");
         OnDeath?.Invoke();

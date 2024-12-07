@@ -145,6 +145,7 @@ public class LaraCroftInventory : MonoBehaviour
             laraMovement.EquipBow(false);
             potion.SetActive(false);
             kit.SetActive(false);
+            Torch.SetActive(false);
         }
     }
     
@@ -176,6 +177,6 @@ public class LaraCroftInventory : MonoBehaviour
         laraMovement.EquipBow(false);
         bow.SetActive(false);
         kit.SetActive(false);
-        Debug.Log("linterna...");
+        Debug.Log("antorcha...");
     }
 }
