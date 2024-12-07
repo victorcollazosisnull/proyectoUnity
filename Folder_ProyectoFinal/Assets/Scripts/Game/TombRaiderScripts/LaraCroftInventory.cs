@@ -17,6 +17,7 @@ public class LaraCroftInventory : MonoBehaviour
     public GameObject bow;
     public GameObject potion;
     public GameObject kit;
+    public GameObject Torch;
     private LaraCroftMovement laraMovement;
 
     void Start()
@@ -121,6 +122,7 @@ public class LaraCroftInventory : MonoBehaviour
             laraMovement.EquipBow(true);
             potion.SetActive(false);
             kit.SetActive(false);
+            Torch.SetActive(false);
         }
 
         else if (currentBox.Value.sprite != null && currentBox.Value.sprite.name == "Potion")
@@ -133,7 +135,7 @@ public class LaraCroftInventory : MonoBehaviour
             UseKit();
         }
 
-        else if (currentBox.Value.sprite != null && currentBox.Value.sprite.name == "Torch")
+        else if (currentBox.Value.sprite != null && currentBox.Value.sprite.name == "torch")
         {
             EquipTorch();
         }
@@ -145,13 +147,14 @@ public class LaraCroftInventory : MonoBehaviour
             kit.SetActive(false);
         }
     }
-
+    
     private void UsePotion()
     {
         potion.SetActive(true);
         laraMovement.EquipBow(false);
         bow.SetActive(false);
         kit.SetActive(false);
+        Torch.SetActive(false);
         Debug.Log("poción...");
         
     }
@@ -162,11 +165,17 @@ public class LaraCroftInventory : MonoBehaviour
         laraMovement.EquipBow(false);
         bow.SetActive(false);
         potion.SetActive(false);
+        Torch.SetActive(false);
         Debug.Log("kit...");
     }
 
     private void EquipTorch()
     {
+        Torch.SetActive(true);
+        potion.SetActive(false);
+        laraMovement.EquipBow(false);
+        bow.SetActive(false);
+        kit.SetActive(false);
         Debug.Log("linterna...");
     }
 }
