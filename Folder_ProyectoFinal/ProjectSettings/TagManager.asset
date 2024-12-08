@@ -11,6 +11,7 @@ TagManager:
   - tnt
   - diamond
   - Enemy
+  - Boss
   layers:
   - Default
   - TransparentFX

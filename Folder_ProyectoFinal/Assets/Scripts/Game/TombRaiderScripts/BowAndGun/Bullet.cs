@@ -4,28 +4,45 @@ public class Bullet : MonoBehaviour
 {
     public float speed = 10f;
     public float lifeTime = 5f;
-    public float damage = 20f; 
+    public float damage = 20f;
 
     private void Start()
     {
-        Destroy(gameObject, lifeTime);
+        Destroy(gameObject, lifeTime); 
     }
 
     private void Update()
     {
-        transform.position += transform.forward * speed * Time.deltaTime;
+        transform.position += transform.forward * speed * Time.deltaTime; 
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision collision)
     {
-        if (other.CompareTag("Enemy")) 
+        if (collision.gameObject.CompareTag("Enemy")) 
         {
-            EnemieLife enemyLife = other.GetComponent<EnemieLife>();
-            if (enemyLife != null)
+            EnemyIA enemyIA = collision.gameObject.GetComponent<EnemyIA>(); 
+
+            if (enemyIA != null)
             {
-                enemyLife.TakeDamage(damage);
+                enemyIA.TakeDamage(); 
             }
+
             Destroy(gameObject); 
+        }
+        else if (collision.gameObject.CompareTag("Boss")) 
+        {
+            BossController bossController = collision.gameObject.GetComponent<BossController>(); 
+
+            if (bossController != null)
+            {
+                bossController.TakeDamage(); 
+            }
+
+            Destroy(gameObject);
+        }
+        else if (collision.gameObject.CompareTag("destroy")) 
+        {
+            Destroy(this.gameObject);
         }
     }
 }

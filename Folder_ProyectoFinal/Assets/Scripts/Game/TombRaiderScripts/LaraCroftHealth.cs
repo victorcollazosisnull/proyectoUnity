@@ -35,7 +35,7 @@ public class LaraCroftHealth : MonoBehaviour
         EnemyPatrol.OnPlayerDamage -= TakeDamage;
     }
 
-    private void TakeDamage(float damageAmount)
+    public void TakeDamage(float damageAmount)
     {
         if (isInvulnerable) return;
 
