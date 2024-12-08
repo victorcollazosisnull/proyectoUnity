@@ -9,6 +9,7 @@ TagManager:
   - head
   - destroy
   - tnt
+  - diamond
   layers:
   - Default
   - TransparentFX

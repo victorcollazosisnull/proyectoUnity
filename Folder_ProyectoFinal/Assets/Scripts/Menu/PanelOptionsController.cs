@@ -1,11 +1,16 @@
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using TMPro;
 using System.Threading;
 
 public class PanelOptionsController : MonoBehaviour
 {
     public static bool isGamePaused = false;
+
+    [Header("UI References")]
+    public TextMeshProUGUI optionsTitle; 
+    public Button goToMenuButton;
 
     [Header("Panel Options Movement")]
     public RectTransform optionsPanel;
@@ -43,6 +48,7 @@ public class PanelOptionsController : MonoBehaviour
 
     void Start()
     {
+        goToMenuButton.gameObject.SetActive(false);
         optionsPanel.anchoredPosition = hiddenPosition;
 
         brightnessSlider.value = currentBrillo;
@@ -229,5 +235,24 @@ public class PanelOptionsController : MonoBehaviour
         {
             sensitivitySlider.onValueChanged.RemoveListener(SetSensitivity);
         }
+    }
+    public void UpdatePanelForGame(bool isGame)
+    {
+        if (isGame)
+        {
+            optionsTitle.text = "PAUSE";
+            goToMenuButton.gameObject.SetActive(true);
+        }
+        else
+        {
+            optionsTitle.text = "OPTIONS";
+            goToMenuButton.gameObject.SetActive(false);
+        }
+    }
+
+    public void OnGoToMenuPressed()
+    {
+        Time.timeScale = 1f; 
+        GameFlowController.Instance.ReturnToMenu(); 
     }
 }

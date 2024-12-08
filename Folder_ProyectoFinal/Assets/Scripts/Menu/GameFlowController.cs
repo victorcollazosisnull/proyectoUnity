@@ -4,9 +4,11 @@ using UnityEngine;
 using System;
 using Cinemachine;
 using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 
 public class GameFlowController : MonoBehaviour
 {
+    public static GameFlowController Instance { get; private set; }
     private bool isGameActived;
 
     public static event Action OnMenuExited;
@@ -38,7 +40,17 @@ public class GameFlowController : MonoBehaviour
     [SerializeField] private AudioClipsSO gameMusicClip; 
     [SerializeField] private AudioSource audioSource; 
     [SerializeField] private AudioMixerGroup musicMixerGroup;
-
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
     private void Start()
     {
         Cursor.lockState = CursorLockMode.None;
@@ -100,7 +112,7 @@ public class GameFlowController : MonoBehaviour
         Cursor.visible = false;
 
         InputReader.BlockInputs(false);
-
+        panelOptionsController.UpdatePanelForGame(true);
         OnGameStarted?.Invoke();
     }
 
@@ -209,4 +221,21 @@ public class GameFlowController : MonoBehaviour
             panelOptionsController.HidePanelOptions();
         }
     }
+    public void ReturnToMenu()
+    {
+        InputReader.BlockInputs(true);
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+    private void ChangeMusicToMenu()
+    {
+        audioSource.Stop();
+
+        audioSource.clip = menuMusicClip.clip;
+        audioSource.volume = menuMusicClip.volume;
+        audioSource.pitch = menuMusicClip.pitch;
+        audioSource.outputAudioMixerGroup = musicMixerGroup;
+        audioSource.Play();
+    }
+
 }
