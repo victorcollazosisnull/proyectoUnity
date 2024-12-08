@@ -19,7 +19,7 @@ public class LaraCroftMovement : MonoBehaviour
     [SerializeField] private bool LaraIsRunning = false;
     [SerializeField] private bool canMove = true;
     [SerializeField] private bool LaraisCrouching = false;
-    [SerializeField] private bool LaraisWalkingCrouched = false;
+    [SerializeField] private bool LaraisWalkingCrouched = false; 
     [SerializeField] private float LarajumpForce = 5f;
     [SerializeField] private bool LaraIsAiming = false;
     [SerializeField] private bool LaraHasBow = false;
@@ -66,6 +66,9 @@ public class LaraCroftMovement : MonoBehaviour
     public float gravity = -9.81f;
     private Vector3 launchDirection;
 
+    public static event Action<int> OnDiamondCollected;
+    private int diamondCount = 0;
+
     void Awake()
     {
         LaraRigidbody = GetComponent<Rigidbody>();
@@ -109,12 +112,20 @@ public class LaraCroftMovement : MonoBehaviour
         movementInput = new Vector3(input.x, 0, input.y);
 
         bool isWalking = movementInput != Vector3.zero && !LaraIsRunning && !LaraisCrouching;
-        OnMovementAnimation?.Invoke(isWalking); 
+        OnMovementAnimation?.Invoke(isWalking);
 
         bool isCrouchWalking = LaraisCrouching && movementInput != Vector3.zero;
-        OnCrouchWalkingAnimation?.Invoke(isCrouchWalking); 
+        OnCrouchWalkingAnimation?.Invoke(isCrouchWalking);
 
         isMoving = movementInput != Vector3.zero;
+
+        if (!isMoving)
+        {
+            LaraAnimator.SetBool("LaraIsRunning", false);
+            LaraAnimator.SetBool("LaraIsJumping", false);
+            OnMovementAnimation?.Invoke(false);
+            OnCrouchWalkingAnimation?.Invoke(false);
+        }
     }
 
     private void Jumping()
@@ -136,16 +147,19 @@ public class LaraCroftMovement : MonoBehaviour
         {
             LaraIsRunning = false;
         }
-        else if (isRunning && movementInput != Vector3.zero)
-        {
-            LaraIsRunning = true;
-        }
         else
         {
-            LaraIsRunning = false;
+            LaraIsRunning = isRunning;
         }
+
         OnRunningAnimation?.Invoke(LaraIsRunning);
         LaraAnimator.SetBool("LaraIsRunning", LaraIsRunning);
+
+        if (movementInput == Vector3.zero)
+        {
+            OnMovementAnimation?.Invoke(false);
+            LaraAnimator.SetBool("LaraIsRunning", false);
+        }
     }
 
     private void Crouch()
@@ -192,14 +206,31 @@ public class LaraCroftMovement : MonoBehaviour
     }
     private void HandleAimInput(bool isAiming)
     {
-        this.LaraIsAiming = isAiming;
+        if (isAiming && !LaraHasBow)
+        {
+            isAiming = false; 
+        }
+
+        LaraIsAiming = isAiming;
 
         if (LaraHasBow)
         {
-            OnBowAimAnimation?.Invoke(isAiming); 
+            OnBowAimAnimation?.Invoke(isAiming);
             LaraAnimator.SetBool("LaraIsAimingBow", isAiming);
-            ShowTrayectory();
-            CamarasAimInput(isAiming);
+            if (isAiming)
+            {
+                ShowTrayectory();
+            }
+            else
+            {
+                lineRenderer.positionCount = 0;
+            }
+        }
+        else
+        {
+            OnBowAimAnimation?.Invoke(false);
+            LaraAnimator.SetBool("LaraIsAimingBow", false);
+            lineRenderer.positionCount = 0;
         }
     }
 
@@ -261,9 +292,15 @@ public class LaraCroftMovement : MonoBehaviour
     public void EquipBow(bool hasBow)
     {
         LaraHasBow = hasBow;
+
+        if (!hasBow && LaraIsAiming) 
+        {
+            HandleAimInput(false); 
+        }
+
         if (hasBow)
         {
-            Debug.Log("Lara ahora tiene el arco .");
+            Debug.Log("Lara ahora tiene el arco.");
         }
         else
         {
@@ -273,9 +310,15 @@ public class LaraCroftMovement : MonoBehaviour
     public void EquipKit(bool hasKit)
     {
         LaraHasKit = hasKit;
+
         if (hasKit)
         {
-            Debug.Log("Lara ahora tiene el kit .");
+            if (LaraIsAiming && LaraHasBow) 
+            {
+                HandleAimInput(false); 
+            }
+
+            Debug.Log("Lara ahora tiene el kit.");
         }
         else
         {
@@ -285,13 +328,19 @@ public class LaraCroftMovement : MonoBehaviour
     public void EquipPotion(bool hasPotion)
     {
         LaraHasPotion = hasPotion;
+
         if (hasPotion)
         {
-            Debug.Log("Lara ahora tiene la potion .");
+            if (LaraIsAiming && LaraHasBow) 
+            {
+                HandleAimInput(false); 
+            }
+
+            Debug.Log("Lara ahora tiene la poción.");
         }
         else
         {
-            Debug.Log("Lara DEJO de usar el potion.");
+            Debug.Log("Lara DEJO de usar la poción.");
         }
     }
     private void RotateCamera()
@@ -357,5 +406,14 @@ public class LaraCroftMovement : MonoBehaviour
     public void ResumeMovement()
     {
         canMove = true;
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("diamond"))
+        {
+            Destroy(other.gameObject);
+            diamondCount++; 
+            OnDiamondCollected?.Invoke(diamondCount); 
+        }
     }
 }

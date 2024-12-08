@@ -11,7 +11,7 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI noOption;
     [SerializeField] private TextMeshProUGUI yesOption;
     [SerializeField] private GameObject panelYesOrNo;
-    [SerializeField] private GameObject colliderObject;
+    [SerializeField] private Collider colliderObject;
     private DialogueNode currentNode;
 
     public event Action OnDialogueEnd;
@@ -58,11 +58,6 @@ public class DialogueManager : MonoBehaviour
             yesOption.text = "";
             noOption.text = "";
         }
-
-        if (currentNode.YesNode == null && currentNode.NoNode == null)
-        {
-            colliderObject.GetComponent<Collider>().enabled = true;
-        }
     }
 
     public void OnYesOptionSelected()
@@ -71,8 +66,8 @@ public class DialogueManager : MonoBehaviour
         {
             if (colliderObject != null)
             {
-                colliderObject.GetComponent<Collider>().enabled = false;
-                Debug.Log("desactivado");
+                colliderObject.enabled = false;
+                Debug.Log("Muro sigue habilitado");
             }
             currentNode = currentNode.YesNode;
             ShowCurrentDialogue();
@@ -82,12 +77,27 @@ public class DialogueManager : MonoBehaviour
             EndDialogue();
         }
     }
-
+    public void OnNextDialogue()
+    {
+        if (currentNode?.YesNode != null)
+        {
+            currentNode = currentNode.YesNode; 
+            ShowCurrentDialogue();
+        }
+        else
+        {
+            EndDialogue(); 
+        }
+    }
     public void OnNoOptionSelected()
     {
         if (currentNode.NoNode != null)
         {
-            colliderObject.GetComponent<Collider>().enabled = true;
+            if (colliderObject != null)
+            {
+                colliderObject.enabled = true;
+                Debug.Log("Muro deshabilitado");
+            }
             Debug.Log("no puedes bajo");
             currentNode = currentNode.NoNode;
             ShowCurrentDialogue();
