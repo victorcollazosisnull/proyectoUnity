@@ -22,10 +22,13 @@ public class LaraCroftMovement : MonoBehaviour
     [SerializeField] private bool LaraisWalkingCrouched = false; 
     [SerializeField] private float LarajumpForce = 5f;
     [SerializeField] private bool LaraIsAiming = false;
+    [SerializeField] private bool LaraIsInteracting;
+
+    [Header("Lara Croft Items")]
     [SerializeField] private bool LaraHasBow = false;
     [SerializeField] private bool LaraHasPotion = false;
     [SerializeField] private bool LaraHasKit = false;
-    [SerializeField] private bool LaraIsInteracting;
+    [SerializeField] private bool LaraHasGun = false;
 
     public float mouseSensitivity;
     public Transform cameraTransform;
@@ -40,6 +43,8 @@ public class LaraCroftMovement : MonoBehaviour
     public event Action<bool> OnCrouchWalkingAnimation;
     public event Action<bool> OnBowAimAnimation; 
     public event Action OnBowShootAnimation;
+    public event Action<bool> OnGunAimAnimation;
+    public event Action<bool> OnGunWalkAnimation;
 
     [Header("Raycast Detection Floor")]
     [SerializeField] private bool isJumping = false;
@@ -65,6 +70,10 @@ public class LaraCroftMovement : MonoBehaviour
     public int resolution = 30;
     public float gravity = -9.81f;
     private Vector3 launchDirection;
+
+    [Header("Lara Croft Gun")]
+    public GameObject gunBulletPrefab;  
+    public Transform gunMuzzle;
 
     public static event Action<int> OnDiamondCollected;
     private int diamondCount = 0;
@@ -206,7 +215,7 @@ public class LaraCroftMovement : MonoBehaviour
     }
     private void HandleAimInput(bool isAiming)
     {
-        if (isAiming && !LaraHasBow)
+        if (isAiming && !LaraHasBow && !LaraHasGun)
         {
             isAiming = false; 
         }
@@ -226,10 +235,17 @@ public class LaraCroftMovement : MonoBehaviour
                 lineRenderer.positionCount = 0;
             }
         }
+        else if (LaraHasGun)
+        {
+            OnGunAimAnimation?.Invoke(isAiming);
+            LaraAnimator.SetBool("LaraIsAimingGun", isAiming);
+
+        }
         else
         {
             OnBowAimAnimation?.Invoke(false);
             LaraAnimator.SetBool("LaraIsAimingBow", false);
+            LaraAnimator.SetBool("LaraIsAimingGun", false);
             lineRenderer.positionCount = 0;
         }
     }
@@ -238,22 +254,47 @@ public class LaraCroftMovement : MonoBehaviour
     {
         if (LaraHasBow && LaraIsAiming)
         {
-            OnBowShootAnimation?.Invoke(); 
+            OnBowShootAnimation?.Invoke();
             LaraAnimator.SetTrigger("LaraShootBow");
-            Shoot();
+            ShootArrow();  
+        }
+        else if (LaraHasGun && LaraIsAiming)
+        {
+            FireGun();  
         }
         else if (LaraHasPotion)
         {
-            Debug.Log("use la pocionnnnn");
+            Debug.Log("Usar la poción");
             inventory.UsePotion();
         }
         else if (LaraHasKit)
         {
-            Debug.Log("use el kitttt");
+            Debug.Log("Usar el kit");
             inventory.UseKit();
         }
     }
-    public void Shoot()
+    private void FireGun()
+    {
+        GameObject bullet = Instantiate(gunBulletPrefab, gunMuzzle.position, Quaternion.identity);
+
+        Rigidbody rb = bullet.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            Vector3 shootingDirection = GetShootingDirection();
+            rb.velocity = shootingDirection * 10f;
+            bullet.transform.rotation = Quaternion.LookRotation(shootingDirection);
+        }
+    }
+    private Vector3 GetShootingDirection()
+    {
+        Vector3 targetDirection = Camera.main.transform.forward;
+
+        targetDirection.y = 0f;
+        targetDirection.Normalize();
+
+        return targetDirection;
+    }
+    public void ShootArrow()
     {
         GameObject flecha = Instantiate(bowPrefab, originPoint.position, Quaternion.identity);
         Rigidbody rb = flecha.GetComponent<Rigidbody>();
@@ -305,6 +346,23 @@ public class LaraCroftMovement : MonoBehaviour
         else
         {
             Debug.Log("Lara DEJO de usar el arco.");
+        }
+    }
+    public void EquipGun(bool hasGun)
+    {
+        LaraHasGun = hasGun;
+        if (!hasGun && LaraIsAiming)
+        {
+            HandleAimInput(false);
+        }
+
+        if (hasGun)
+        {
+            Debug.Log("Lara ahora tiene el arma");
+        }
+        else
+        {
+            Debug.Log("Lara DEJO de usar el arma.");
         }
     }
     public void EquipKit(bool hasKit)

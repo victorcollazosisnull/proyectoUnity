@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class BossController : MonoBehaviour
 {
-    public Transform player; 
-    public GameObject enemyPrefab; 
-    public Transform[] spawnPoints; 
-    public float summonCooldown = 10f; 
-    public int enemiesPerWave = 5; 
-    private Animator animator; 
+    public Transform player;
+    public GameObject enemyPrefab;
+    public Transform[] spawnPoints;
+    public float summonCooldown = 10f;
+    public int enemiesPerWave = 5;
+    private Animator animator;
 
     private bool isSummoning = false;
 
@@ -20,7 +20,7 @@ public class BossController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player")) 
+        if (other.CompareTag("Player"))
         {
             StartCoroutine(SummonEnemiesRoutine());
         }
@@ -33,15 +33,15 @@ public class BossController : MonoBehaviour
             if (!isSummoning)
             {
                 isSummoning = true;
-                animator.SetBool("Invoke", true); 
+                animator.SetBool("Invoke", true);
 
                 yield return new WaitForSeconds(1f);
                 SummonEnemies();
 
-                animator.SetBool("Invoke", false); 
+                animator.SetBool("Invoke", false);
                 isSummoning = false;
             }
-            yield return new WaitForSeconds(summonCooldown); 
+            yield return new WaitForSeconds(summonCooldown);
         }
     }
 
@@ -57,8 +57,8 @@ public class BossController : MonoBehaviour
                 EnemyIA enemyAI = enemy.GetComponent<EnemyIA>();
                 if (enemyAI != null)
                 {
-                    enemyAI.SetPlayer(player);
-                    enemyAI.StartChasingPlayer(); 
+                    enemyAI.SetPlayer(player);  
+                    enemyAI.StartChase(); 
                 }
             }
         }

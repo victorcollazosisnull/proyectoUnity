@@ -10,6 +10,7 @@ TagManager:
   - destroy
   - tnt
   - diamond
+  - Enemy
   layers:
   - Default
   - TransparentFX

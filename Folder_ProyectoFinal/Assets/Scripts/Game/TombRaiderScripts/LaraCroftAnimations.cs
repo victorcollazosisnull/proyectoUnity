@@ -19,6 +19,7 @@ public class LaraCroftAnimations : MonoBehaviour
         playerMovement.OnCrouchWalkingAnimation += CrouchWalkingAnimation;
         playerMovement.OnBowAimAnimation += BowAimAnimation;
         playerMovement.OnBowShootAnimation += BowShootAnimation;
+        playerMovement.OnGunAimAnimation += GunAimAnimation;
     }
 
     private void OnDisable()
@@ -31,6 +32,7 @@ public class LaraCroftAnimations : MonoBehaviour
         playerMovement.OnCrouchWalkingAnimation -= CrouchWalkingAnimation;
         playerMovement.OnBowAimAnimation -= BowAimAnimation;
         playerMovement.OnBowShootAnimation -= BowShootAnimation;
+        playerMovement.OnGunAimAnimation -= GunAimAnimation;
     }
 
     private void WalkingAnimation(bool isWalking)
@@ -70,5 +72,13 @@ public class LaraCroftAnimations : MonoBehaviour
     public void PlayDieAnimation()
     {
         animator.SetTrigger("LaraDie"); 
+    }
+    public void GunAimAnimation(bool isAiming)
+    {
+        animator.SetBool("LaraIsAimingGun", isAiming);
+    }
+    public void GunWalkAnimation(bool isWalking)
+    {
+        animator.SetBool("LaraIsWalkGun", isWalking);
     }
 }

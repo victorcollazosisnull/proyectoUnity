@@ -1,22 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using System;
+using UnityEngine.UI;
 
-public class EnemieLife : MonoBehaviour
+public class EnemyIALife : MonoBehaviour
 {
-    private EnemyPatrol enemyPatrol;
+    private EnemyIA enemyIA;  
     public static event Action OnDeath;
     public float maxHealth = 100f;
     public float currentHealth;
     public Slider healthSlider;
     private Animator animator;
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        enemyPatrol = GetComponent<EnemyPatrol>();
+        enemyIA = GetComponent<EnemyIA>(); 
     }
+
     private void Start()
     {
         currentHealth = maxHealth;
@@ -37,8 +39,6 @@ public class EnemieLife : MonoBehaviour
 
     public void Die()
     {
-        enemyPatrol.StopChase();
-        enemyPatrol.StopPatrolling();
         animator.SetTrigger("Die");
         OnDeath?.Invoke();
         StartCoroutine(WaitForDeathAnimation());
@@ -46,7 +46,7 @@ public class EnemieLife : MonoBehaviour
 
     private IEnumerator WaitForDeathAnimation()
     {
-        yield return new WaitForSeconds(2f);
-        Destroy(gameObject); 
+        yield return new WaitForSeconds(2f); 
+        Destroy(gameObject);  
     }
 }

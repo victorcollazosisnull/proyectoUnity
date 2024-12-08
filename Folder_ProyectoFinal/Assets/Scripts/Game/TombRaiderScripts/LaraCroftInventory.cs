@@ -19,6 +19,7 @@ public class LaraCroftInventory : MonoBehaviour
     public GameObject potion;
     public GameObject kit;
     public GameObject Torch;
+    public GameObject gun;
 
     private GameObject currentEquippedItem;
     private void Awake()
@@ -42,6 +43,10 @@ public class LaraCroftInventory : MonoBehaviour
         if (bow != null)
         {
             bow.SetActive(false);
+        }
+        if (gun != null)
+        {
+            gun.SetActive(false);
         }
     }
 
@@ -123,40 +128,59 @@ public class LaraCroftInventory : MonoBehaviour
         if (currentBox.Value.sprite != null && currentBox.Value.sprite.name == "arrow")
         {
             bow.SetActive(true);
+            gun.SetActive(false);
             currentEquippedItem = bow;
             laraMovement.EquipBow(true);
             laraMovement.EquipKit(false);
             laraMovement.EquipPotion(false);
+            laraMovement.EquipGun(false);
             potion.SetActive(false);
             kit.SetActive(false);
             Torch.SetActive(false);
         }
+        else if (currentBox.Value.sprite != null && currentBox.Value.sprite.name == "gun")
+        {
+            gun.SetActive(true);
+            bow.SetActive(false);
+            laraMovement.EquipGun(true);
+            currentEquippedItem = gun;
+            laraMovement.EquipBow(false);
+            laraMovement.EquipKit(false);
+            laraMovement.EquipPotion(false);
+        }
         else if (currentBox.Value.sprite != null && currentBox.Value.sprite.name == "Potion")
         {
             GetPotion();
+            bow.SetActive(false);
             currentEquippedItem = potion;
             laraMovement.EquipPotion(true);
             laraMovement.EquipKit(false);
+            laraMovement.EquipGun(false);
         }
         else if (currentBox.Value.sprite != null && currentBox.Value.sprite.name == "kit")
         {
             GetKit();
             laraMovement.EquipKit(true);
+            bow.SetActive(false);
             laraMovement.EquipPotion(false);
+            laraMovement.EquipGun(false);
             currentEquippedItem = kit;
         }
         else if (currentBox.Value.sprite != null && currentBox.Value.sprite.name == "torch")
         {
             EquipTorch();
             currentEquippedItem = Torch;
+            bow.SetActive(false);
             laraMovement.EquipKit(false);
             laraMovement.EquipPotion(false);
+            laraMovement.EquipGun(false);
         }
         else
         {
             bow.SetActive(false);
             laraMovement.EquipBow(false);
             laraMovement.EquipKit(false);
+            laraMovement.EquipGun(false);
             laraMovement.EquipPotion(false);
             potion.SetActive(false);
             kit.SetActive(false);

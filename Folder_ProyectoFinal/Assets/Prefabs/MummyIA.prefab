@@ -1639,11 +1639,11 @@ GameObject:
   - component: {fileID: 4233086254949549764}
   - component: {fileID: 2924534503109631051}
   - component: {fileID: 8270545090490950922}
-  - component: {fileID: 5898509906590769846}
   - component: {fileID: 7202249660285650601}
+  - component: {fileID: -6661770318448153640}
   m_Layer: 0
   m_Name: MummyIA
-  m_TagString: enemy
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1757,21 +1757,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.33112586, y: 1.4312989, z: 0.17654625}
   m_Center: {x: -0.015761768, y: 0.7167585, z: -0.0035364993}
---- !u!114 &5898509906590769846
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8665914286829336448}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f445ead564099ce43af3ee6d3bcc5216, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 100
-  currentHealth: 0
-  healthSlider: {fileID: 1583205104147363934}
 --- !u!114 &7202249660285650601
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1785,7 +1770,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chaseSpeed: 3
+  detectionRadius: 5
   attackRadius: 1.5
+  stopChaseRadius: 7
+  minAttackDistance: 1
+  health: 100
+--- !u!114 &-6661770318448153640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8665914286829336448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de7d4b8132c104c459d15853fd7a179c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8669337492508483427
 GameObject:
   m_ObjectHideFlags: 0
