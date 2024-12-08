@@ -11,6 +11,7 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI noOption;
     [SerializeField] private TextMeshProUGUI yesOption;
     [SerializeField] private GameObject panelYesOrNo;
+    [SerializeField] private GameObject colliderObject;
     private DialogueNode currentNode;
 
     public event Action OnDialogueEnd;
@@ -30,6 +31,7 @@ public class DialogueManager : MonoBehaviour
         Cursor.visible = true;
         inputReader.BlockInputs(true);
         movement.StopMovement();
+        colliderObject.GetComponent<Collider>().enabled = true;
     }
 
     private void ShowCurrentDialogue()
@@ -56,12 +58,22 @@ public class DialogueManager : MonoBehaviour
             yesOption.text = "";
             noOption.text = "";
         }
+
+        if (currentNode.YesNode == null && currentNode.NoNode == null)
+        {
+            colliderObject.GetComponent<Collider>().enabled = true;
+        }
     }
 
     public void OnYesOptionSelected()
     {
         if (currentNode.YesNode != null)
         {
+            if (colliderObject != null)
+            {
+                colliderObject.GetComponent<Collider>().enabled = false;
+                Debug.Log("desactivado");
+            }
             currentNode = currentNode.YesNode;
             ShowCurrentDialogue();
         }
@@ -75,6 +87,8 @@ public class DialogueManager : MonoBehaviour
     {
         if (currentNode.NoNode != null)
         {
+            colliderObject.GetComponent<Collider>().enabled = true;
+            Debug.Log("no puedes bajo");
             currentNode = currentNode.NoNode;
             ShowCurrentDialogue();
         }

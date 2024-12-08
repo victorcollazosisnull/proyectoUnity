@@ -1785,6 +1785,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chaseSpeed: 3
+  attackRadius: 1.5
 --- !u!1 &8669337492508483427
 GameObject:
   m_ObjectHideFlags: 0
