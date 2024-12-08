@@ -11,6 +11,7 @@ public class LaraCroftMovement : MonoBehaviour
     private Rigidbody LaraRigidbody;
     private LaraCroftInputReader inputReader;
     private Animator LaraAnimator;
+    private LaraCroftInventory inventory;
 
     [Header("Lara Croft Movement")]
     [SerializeField] private float LaraWalk;
@@ -22,6 +23,8 @@ public class LaraCroftMovement : MonoBehaviour
     [SerializeField] private float LarajumpForce = 5f;
     [SerializeField] private bool LaraIsAiming = false;
     [SerializeField] private bool LaraHasBow = false;
+    [SerializeField] private bool LaraHasPotion = false;
+    [SerializeField] private bool LaraHasKit = false;
     [SerializeField] private bool LaraIsInteracting;
 
     public float mouseSensitivity;
@@ -68,6 +71,7 @@ public class LaraCroftMovement : MonoBehaviour
         LaraRigidbody = GetComponent<Rigidbody>();
         LaraAnimator = GetComponent<Animator>();
         inputReader = GetComponent<LaraCroftInputReader>();
+        inventory = GetComponent<LaraCroftInventory>();
     }
 
     private void Start() 
@@ -207,6 +211,16 @@ public class LaraCroftMovement : MonoBehaviour
             LaraAnimator.SetTrigger("LaraShootBow");
             Shoot();
         }
+        else if (LaraHasPotion)
+        {
+            Debug.Log("use la pocionnnnn");
+            inventory.UsePotion();
+        }
+        else if (LaraHasKit)
+        {
+            Debug.Log("use el kitttt");
+            inventory.UseKit();
+        }
     }
     public void Shoot()
     {
@@ -219,7 +233,6 @@ public class LaraCroftMovement : MonoBehaviour
         }
         LaraIsAiming = false;
     }
-
     private void CalculateDirection()
     {
         launchDirection = cameraTransform.forward;
@@ -255,6 +268,30 @@ public class LaraCroftMovement : MonoBehaviour
         else
         {
             Debug.Log("Lara DEJO de usar el arco.");
+        }
+    }
+    public void EquipKit(bool hasKit)
+    {
+        LaraHasKit = hasKit;
+        if (hasKit)
+        {
+            Debug.Log("Lara ahora tiene el kit .");
+        }
+        else
+        {
+            Debug.Log("Lara DEJO de usar el kit.");
+        }
+    }
+    public void EquipPotion(bool hasPotion)
+    {
+        LaraHasPotion = hasPotion;
+        if (hasPotion)
+        {
+            Debug.Log("Lara ahora tiene la potion .");
+        }
+        else
+        {
+            Debug.Log("Lara DEJO de usar el potion.");
         }
     }
     private void RotateCamera()

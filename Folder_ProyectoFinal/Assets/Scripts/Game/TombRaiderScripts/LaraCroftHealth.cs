@@ -82,4 +82,22 @@ public class LaraCroftHealth : MonoBehaviour
         yield return new WaitForSeconds(invulnerabilityTime);
         isInvulnerable = false;
     }
+    public void UseMedKit()
+    {
+        if (currentHealth < maxHealth) 
+        {
+            currentHealth += 2f; 
+            if (currentHealth > maxHealth)
+            {
+                currentHealth = maxHealth; 
+            }
+            healthBar.RestarVida(currentHealth); 
+        }
+    }
+    public void UsePotion()
+    {
+        currentHealth = maxHealth;
+        healthBar.RestarVida(currentHealth); 
+        Debug.Log("Salud restaurada como debe ser");
+    }
 }

@@ -6,6 +6,7 @@ using System;
 
 public class EnemieLife : MonoBehaviour
 {
+    private EnemyPatrol enemyPatrol;
     public static event Action OnDeath;
     public float maxHealth = 100f;
     public float currentHealth;
@@ -14,6 +15,7 @@ public class EnemieLife : MonoBehaviour
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        enemyPatrol = GetComponent<EnemyPatrol>();
     }
     private void Start()
     {
@@ -35,6 +37,8 @@ public class EnemieLife : MonoBehaviour
 
     public void Die()
     {
+        enemyPatrol.StopChase();
+        enemyPatrol.StopPatrolling();
         animator.SetTrigger("Die");
         OnDeath?.Invoke();
         StartCoroutine(WaitForDeathAnimation());
@@ -45,4 +49,5 @@ public class EnemieLife : MonoBehaviour
         yield return new WaitForSeconds(2f);
         Destroy(gameObject); 
     }
+
 }

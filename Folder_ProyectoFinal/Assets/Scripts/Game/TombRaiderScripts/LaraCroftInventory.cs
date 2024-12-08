@@ -1,10 +1,11 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.InputSystem;
 
 public class LaraCroftInventory : MonoBehaviour
 {
     private LaraCroftInputReader inputReader;
+    private LaraCroftMovement laraMovement;
+    private LaraCroftHealth health;
     public DoubleCircularLinkedList<Image> inventorySlots = new DoubleCircularLinkedList<Image>();
     private DoubleCircularLinkedList<Image>.Node currentBox;
     public Image[] InventoryBoxes;
@@ -18,8 +19,14 @@ public class LaraCroftInventory : MonoBehaviour
     public GameObject potion;
     public GameObject kit;
     public GameObject Torch;
-    private LaraCroftMovement laraMovement;
 
+    private GameObject currentEquippedItem;
+    private void Awake()
+    {
+        inputReader = GetComponent<LaraCroftInputReader>();
+        laraMovement = GetComponent<LaraCroftMovement>();
+        health = GetComponent<LaraCroftHealth>();
+    }
     void Start()
     {
         for (int i = 0; i < InventoryBoxes.Length; i++)
@@ -30,14 +37,11 @@ public class LaraCroftInventory : MonoBehaviour
         originalScaleBoxes = currentBox.Value.transform.localScale;
         HighlightCurrentBox();
 
-        inputReader = GetComponent<LaraCroftInputReader>();
-        laraMovement = GetComponent<LaraCroftMovement>();
-
         inputReader.OnMouseWheelInput += HandleMouse;
 
         if (bow != null)
         {
-            bow.SetActive(false); 
+            bow.SetActive(false);
         }
     }
 
@@ -112,44 +116,55 @@ public class LaraCroftInventory : MonoBehaviour
         currentBox.Value.transform.localScale = originalScaleBoxes;
     }
 
-    private void CheckForItem() 
+    private void CheckForItem()
     {
         if (bow == null || laraMovement == null) return;
 
         if (currentBox.Value.sprite != null && currentBox.Value.sprite.name == "arrow")
         {
             bow.SetActive(true);
+            currentEquippedItem = bow;
             laraMovement.EquipBow(true);
+            laraMovement.EquipKit(false);
+            laraMovement.EquipPotion(false);
             potion.SetActive(false);
             kit.SetActive(false);
             Torch.SetActive(false);
         }
-
         else if (currentBox.Value.sprite != null && currentBox.Value.sprite.name == "Potion")
         {
-            UsePotion();
+            GetPotion();
+            currentEquippedItem = potion;
+            laraMovement.EquipPotion(true);
+            laraMovement.EquipKit(false);
         }
-
         else if (currentBox.Value.sprite != null && currentBox.Value.sprite.name == "kit")
         {
-            UseKit();
+            GetKit();
+            laraMovement.EquipKit(true);
+            laraMovement.EquipPotion(false);
+            currentEquippedItem = kit;
         }
-
         else if (currentBox.Value.sprite != null && currentBox.Value.sprite.name == "torch")
         {
             EquipTorch();
+            currentEquippedItem = Torch;
+            laraMovement.EquipKit(false);
+            laraMovement.EquipPotion(false);
         }
         else
         {
             bow.SetActive(false);
             laraMovement.EquipBow(false);
+            laraMovement.EquipKit(false);
+            laraMovement.EquipPotion(false);
             potion.SetActive(false);
             kit.SetActive(false);
             Torch.SetActive(false);
+            currentEquippedItem = null;
         }
     }
-    
-    private void UsePotion()
+    private void GetPotion()
     {
         potion.SetActive(true);
         laraMovement.EquipBow(false);
@@ -157,10 +172,15 @@ public class LaraCroftInventory : MonoBehaviour
         kit.SetActive(false);
         Torch.SetActive(false);
         Debug.Log("poción...");
-        
     }
-
-    private void UseKit()
+    public void UsePotion()
+    {
+        Debug.Log("uso potion");
+        health.UsePotion();
+        potion.SetActive(false);
+        currentBox.Value.sprite = null;
+    }
+    private void GetKit()
     {
         kit.SetActive(true);
         laraMovement.EquipBow(false);
@@ -168,6 +188,13 @@ public class LaraCroftInventory : MonoBehaviour
         potion.SetActive(false);
         Torch.SetActive(false);
         Debug.Log("kit...");
+    }
+    public void UseKit()
+    {
+        Debug.Log("uso kit");
+        health.UseMedKit();
+        kit.SetActive(false);
+        currentBox.Value.sprite = null;
     }
 
     private void EquipTorch()

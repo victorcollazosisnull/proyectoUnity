@@ -74,7 +74,7 @@ public class EnemyPatrol : MonoBehaviour
 
         CheckPlayerDistance();
     }
-    private void StopPatrolling()
+    public void StopPatrolling()
     {
         isPatrolling = false;  
     }
@@ -111,7 +111,7 @@ public class EnemyPatrol : MonoBehaviour
         currentChaseSpeed = initialSpeed; 
     }
 
-    public  void StopChase()
+    public void StopChase()
     {
         isChasing = false;
         chaseTime = 0f; 

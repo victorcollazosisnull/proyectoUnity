@@ -7,16 +7,28 @@ public class DoubleCircularLinkedList<T>
         public T Value { get; set; }
         public Node Next { get; set; }
         public Node Previous { get; set; }
+        public int Priority { get; set; } 
 
         public Node(T value)
         {
             Value = value;
             Next = null;
             Previous = null;
+            Priority = 0;
+        }
+
+        public Node(T value, int priority)
+        {
+            Value = value;
+            Next = null;
+            Previous = null;
+            Priority = priority;
         }
     }
+
     public Node Head { get; set; }
     public int Count { get; set; }
+
     public void InsertAtStart(T value)
     {
         Node newNode = new Node(value);
@@ -35,11 +47,12 @@ public class DoubleCircularLinkedList<T>
             lastNode.Next = newNode;
             Head = newNode;
         }
-        Count = Count + 1;
+        Count++;
     }
+
     public Node GetAtIndex(int index)
     {
-        if (index < 0 || index >= Count) 
+        if (index < 0 || index >= Count)
         {
             throw new IndexOutOfRangeException("Índice fuera de rango.");
         }
@@ -55,6 +68,7 @@ public class DoubleCircularLinkedList<T>
 
         return currentNode;
     }
+
     public void InsertAtEnd(T value)
     {
         if (Head == null)
@@ -69,9 +83,10 @@ public class DoubleCircularLinkedList<T>
             newNode.Previous = lastNode;
             lastNode.Next = newNode;
             Head.Previous = newNode;
-            Count = Count + 1;
+            Count++;
         }
     }
+
     public void InsertAtPosition(T value, int position)
     {
         if (position == 0)
@@ -84,7 +99,7 @@ public class DoubleCircularLinkedList<T>
         }
         else if (position > Count)
         {
-            throw new NullReferenceException("Error");
+            throw new IndexOutOfRangeException("Posición fuera de rango.");
         }
         else
         {
@@ -101,63 +116,15 @@ public class DoubleCircularLinkedList<T>
             newNode.Previous = previousNode;
             newNode.Next = nextNode;
             nextNode.Previous = newNode;
-            Count = Count + 1;
+            Count++;
         }
     }
-    public void ModifyAtStart(T value)
-    {
-        if (Head == null)
-        {
-            throw new NullReferenceException("Error");
-        }
-        else
-        {
-            Head.Value = value;
-        }
-    }
-    public void ModifyAtEnd(T value)
-    {
-        if (Head == null)
-        {
-            ModifyAtStart(value);
-        }
-        else
-        {
-            Node lastNode = SearchLastNode();
-            lastNode.Value = value;
-        }
-    }
-    public void ModifyAtPosition(T value, int position)
-    {
-        if (position == 0)
-        {
-            ModifyAtStart(value);
-        }
-        else if (position == Count)
-        {
-            ModifyAtEnd(value);
-        }
-        else if (position > Count)
-        {
-            throw new NullReferenceException("Error");
-        }
-        else
-        {
-            Node current = Head;
-            int iterator = 0;
-            while (iterator < position)
-            {
-                current = current.Next;
-                iterator = iterator + 1;
-            }
-            current.Value = value;
-        }
-    }
+
     public void DeleteAtStart()
     {
         if (Head == null)
         {
-            throw new NullReferenceException("Error");
+            throw new InvalidOperationException("La lista está vacía.");
         }
         else
         {
@@ -166,13 +133,14 @@ public class DoubleCircularLinkedList<T>
             Head.Previous = lastNode;
             lastNode.Next = Head;
         }
-        Count = Count - 1;
+        Count--;
     }
+
     public void DeleteAtEnd()
     {
         if (Head == null)
         {
-            throw new NullReferenceException("Error");
+            throw new InvalidOperationException("La lista está vacía.");
         }
         else
         {
@@ -181,21 +149,22 @@ public class DoubleCircularLinkedList<T>
             newNode.Next = Head;
             Head.Previous = newNode;
         }
-        Count = Count - 1;
+        Count--;
     }
+
     public void DeleteAtPosition(int position)
     {
         if (position == 0)
         {
             DeleteAtStart();
         }
-        else if (position == Count)
+        else if (position == Count - 1)
         {
             DeleteAtEnd();
         }
-        else if (position > Count)
+        else if (position >= Count)
         {
-            throw new NullReferenceException("Error");
+            throw new IndexOutOfRangeException("Posición fuera de rango.");
         }
         else
         {
@@ -204,15 +173,16 @@ public class DoubleCircularLinkedList<T>
             while (iterator < position - 1)
             {
                 previousNode = previousNode.Next;
-                iterator = iterator + 1;
+                iterator++;
             }
-            Node newNode = previousNode.Next;
-            Node nextNode = newNode.Next;
+            Node nodeToDelete = previousNode.Next;
+            Node nextNode = nodeToDelete.Next;
             previousNode.Next = nextNode;
             nextNode.Previous = previousNode;
-            Count = Count - 1;
+            Count--;
         }
     }
+
     private Node SearchLastNode()
     {
         Node tmp = Head;
@@ -221,5 +191,101 @@ public class DoubleCircularLinkedList<T>
             tmp = tmp.Next;
         }
         return tmp;
+    }
+
+    public void EnqueueWithPriority(T value, int priority)
+    {
+        Node newNode = new Node(value, priority);
+
+        if (Head == null)
+        {
+            Head = newNode;
+            newNode.Next = Head;
+            newNode.Previous = Head;
+        }
+        else
+        {
+            Node currentNode = Head;
+
+            if (newNode.Priority > Head.Priority)
+            {
+                newNode.Next = Head;
+                newNode.Previous = Head.Previous;
+                Head.Previous.Next = newNode;
+                Head.Previous = newNode;
+                Head = newNode;
+            }
+            else
+            {
+                while (currentNode.Next != Head && currentNode.Next.Priority >= newNode.Priority)
+                {
+                    currentNode = currentNode.Next;
+                }
+
+                newNode.Next = currentNode.Next;
+                if (currentNode.Next != null)
+                {
+                    currentNode.Next.Previous = newNode;
+                }
+                currentNode.Next = newNode;
+                newNode.Previous = currentNode;
+
+                if (newNode.Next == Head)
+                {
+                    Head.Previous = newNode;
+                }
+            }
+        }
+        Count++;
+    }
+
+    public void Dequeue()
+    {
+        if (Head == null)
+        {
+            throw new InvalidOperationException("La lista está vacía.");
+        }
+
+        if (Head == Head.Next)
+        {
+            Head = null;
+        }
+        else
+        {
+            Node lastNode = Head.Previous;
+            Head = Head.Next;
+            Head.Previous = lastNode;
+            lastNode.Next = Head;
+        }
+
+        Count--;
+    }
+    public void DeleteItemAndShiftLeft(int position)
+    {
+        if (position < 0 || position >= Count)
+        {
+            throw new IndexOutOfRangeException("Índice fuera de rango.");
+        }
+
+        Node nodeToDelete = GetAtIndex(position);
+        Node prevNode = nodeToDelete.Previous;
+        Node nextNode = nodeToDelete.Next;
+
+        if (position == 0) 
+        {
+            Head = nextNode; 
+        }
+
+        prevNode.Next = nextNode; 
+        nextNode.Previous = prevNode; 
+
+        Count--;
+
+        Node current = nextNode;
+        while (current != Head)
+        {
+            current.Previous = current.Previous.Previous;
+            current = current.Next;
+        }
     }
 }
