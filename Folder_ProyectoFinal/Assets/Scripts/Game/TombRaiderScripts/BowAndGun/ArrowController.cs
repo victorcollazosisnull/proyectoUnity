@@ -7,12 +7,15 @@ public class ArrowController : MonoBehaviour
 {
     public float bodyDamage = 20f;
     public float headshotDamage = 100f;
-
     public GameObject explosionEffectPrefab;
-
+    public AudioClip explosionSound; 
+    private AudioSource audioSource;
     public float explosionRadius = 5f;
     public float explosionForce = 1000f;
-
+    private void Awake()
+    {
+        audioSource = GetComponent<AudioSource>(); 
+    }
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("enemy"))
@@ -60,7 +63,10 @@ public class ArrowController : MonoBehaviour
         }
 
         ApplyExplosionForce(tntObject.transform.position);
-
+        if (explosionSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(explosionSound);  
+        }
         Destroy(tntObject);
 
         Destroy(this.gameObject);

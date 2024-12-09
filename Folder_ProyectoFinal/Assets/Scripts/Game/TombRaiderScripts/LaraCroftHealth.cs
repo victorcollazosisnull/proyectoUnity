@@ -177,7 +177,7 @@ public class LaraCroftHealth : MonoBehaviour
         Cursor.visible = true;
     }
 
-    private void RestartLevel()
+    public void RestartLevel()
     {
         SceneManager.LoadScene("ScenePrototypes");
     }

@@ -6,6 +6,8 @@ public class SFXManager : MonoBehaviour
 {
     private AudioSource audioSource;
     public AudioClipsSO walkSoundData;
+    public AudioClipsSO damageSoundData; 
+    public AudioClipsSO deathSoundData;
 
     private void Awake()
     {
@@ -33,5 +35,16 @@ public class SFXManager : MonoBehaviour
         {
             audioSource.Stop();
         }
+    }
+    public void PlayDamageSound()
+    {
+        ConfigureAudioSource(damageSoundData);
+        audioSource.Play();
+    }
+
+    public void PlayDeathSound()
+    {
+        ConfigureAudioSource(deathSoundData);
+        audioSource.Play();
     }
 }

@@ -130,6 +130,9 @@ MonoBehaviour:
   headshotDamage: 100
   explosionEffectPrefab: {fileID: 1919247138715254427, guid: ccdd50e955cdf6f48a431e55f478c8bb,
     type: 3}
+  explosionSound: {fileID: 8300000, guid: 1b6c9f2baa2941f4a989129e3500d3fc, type: 3}
+  explosionRadius: 5
+  explosionForce: 1000
 --- !u!65 &355016600097727454
 BoxCollider:
   m_ObjectHideFlags: 0

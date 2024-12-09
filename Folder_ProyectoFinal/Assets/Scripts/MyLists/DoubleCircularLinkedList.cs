@@ -29,44 +29,45 @@ public class DoubleCircularLinkedList<T>
     public Node Head { get; set; }
     public int Count { get; set; }
 
-    public void InsertAtStart(T value)
+    public void InsertAtStart(T value) //0(1)
     {
-        Node newNode = new Node(value);
-        if (Head == null)
+        Node newNode = new Node(value); // 1 DE CREACION
+        if (Head == null) // 1 DE COMPARACION
         {
-            Head = newNode;
-            newNode.Next = Head;
-            newNode.Previous = Head;
+            Head = newNode; // 1 DE ASIGNACION
+            newNode.Next = Head; // 1 DE ASIGNACION 
+            newNode.Previous = Head; // 1 DE ASIGNACION
         }
         else
         {
-            Node lastNode = SearchLastNode();
-            newNode.Next = Head;
-            newNode.Previous = lastNode;
-            Head.Previous = newNode;
-            lastNode.Next = newNode;
-            Head = newNode;
+            Node lastNode = SearchLastNode(); // 1 DE ACCESO + 1 DE LLAMADA A METODO 
+
+            newNode.Next = Head;  // 1 DE ASIGNACION
+            newNode.Previous = lastNode;  // 1 DE ASIGNACION
+            Head.Previous = newNode;  // 1 DE ASIGNACION
+            lastNode.Next = newNode;  // 1 DE ASIGNACION
+            Head = newNode;  // 1 DE ASIGNACION
         }
-        Count++;
+        Count++;  // 1 DE ASIGNACION
     }
 
-    public Node GetAtIndex(int index)
+    public Node GetAtIndex(int index) //O(1)
     {
-        if (index < 0 || index >= Count)
+        if (index < 0 || index >= Count)  // 1 DE COMPARACION
         {
-            throw new IndexOutOfRangeException("Índice fuera de rango.");
+            throw new IndexOutOfRangeException("Índice fuera de rango."); // 1 DE LECTURA + 1 DE ESCRITURA
         }
 
-        Node currentNode = Head;
-        int i = 0;
+        Node currentNode = Head; // 1 DE ASIGNACION
+        int i = 0;  // 1 DE ASIGNACION
 
-        while (i < index)
+        while (i < index)  // 1 + N (1 + 2)
         {
-            currentNode = currentNode.Next;
-            i++;
+            currentNode = currentNode.Next;  // 1 DE ACCESO
+            i++; // 1 DE ASIGNACION
         }
 
-        return currentNode;
+        return currentNode; // 1 DE ACCESO
     }
 
     public void InsertAtEnd(T value)
@@ -87,7 +88,7 @@ public class DoubleCircularLinkedList<T>
         }
     }
 
-    public void InsertAtPosition(T value, int position)
+    public void InsertAtPosition(T value, int position) // O(N)
     {
         if (position == 0)
         {
@@ -120,20 +121,20 @@ public class DoubleCircularLinkedList<T>
         }
     }
 
-    public void DeleteAtStart()
+    public void DeleteAtStart() // O(1)
     {
-        if (Head == null)
+        if (Head == null) // 1 DE COMPARACION
         {
-            throw new InvalidOperationException("La lista está vacía.");
+            throw new InvalidOperationException("La lista está vacía."); // 1 DE LECTURA + 1 DE ESCRITURA     
         }
         else
         {
-            Node lastNode = SearchLastNode();
-            Head = Head.Next;
-            Head.Previous = lastNode;
-            lastNode.Next = Head;
+            Node lastNode = SearchLastNode(); // 1 DE ACCESO + 1 DE LLAMADA A METODO
+            Head = Head.Next; // 1 DE ASIGNACION
+            Head.Previous = lastNode; // 1 DE ASIGNACION
+            lastNode.Next = Head; // 1 DE ASIGNACION
         }
-        Count--;
+        Count--; // 1 DE ASIGNACION
     }
 
     public void DeleteAtEnd()
@@ -183,60 +184,61 @@ public class DoubleCircularLinkedList<T>
         }
     }
 
-    private Node SearchLastNode()
+    private Node SearchLastNode() // O(N)
     {
-        Node tmp = Head;
-        while (tmp.Next != Head)
+        Node tmp = Head; // 1 DE ASIGNACION
+        while (tmp.Next != Head)  // 1 + N (1 + 2)
         {
-            tmp = tmp.Next;
+            tmp = tmp.Next;  // 1 DE ACCESO
         }
-        return tmp;
+        return tmp; // 1 DE ACCESO
     }
 
-    public void EnqueueWithPriority(T value, int priority)
+    public void EnqueueWithPriority(T value, int priority) // O(N)
     {
-        Node newNode = new Node(value, priority);
+        Node newNode = new Node(value, priority); // 1 DE CREACION
 
-        if (Head == null)
+
+        if (Head == null) // 1 DE COMPARACION
         {
-            Head = newNode;
-            newNode.Next = Head;
-            newNode.Previous = Head;
+            Head = newNode; // 1 DE ASIGNACION
+            newNode.Next = Head; // 1 DE ASIGNACION
+            newNode.Previous = Head; // 1 DE ASIGNACION
         }
         else
         {
-            Node currentNode = Head;
+            Node currentNode = Head;  // 1 DE ASIGNACION
 
-            if (newNode.Priority > Head.Priority)
+            if (newNode.Priority > Head.Priority) // 1 DE COMPARACION
             {
-                newNode.Next = Head;
-                newNode.Previous = Head.Previous;
-                Head.Previous.Next = newNode;
-                Head.Previous = newNode;
-                Head = newNode;
+                newNode.Next = Head;  // 1 DE ASIGNACION
+                newNode.Previous = Head.Previous;  // 1 DE ASIGNACION
+                Head.Previous.Next = newNode; // 1 DE ASIGNACION
+                Head.Previous = newNode; // 1 DE ASIGNACION
+                Head = newNode; // 1 DE ASIGNACION
             }
             else
             {
-                while (currentNode.Next != Head && currentNode.Next.Priority >= newNode.Priority)
+                while (currentNode.Next != Head && currentNode.Next.Priority >= newNode.Priority)  // 1 + N (1 + 2)
                 {
-                    currentNode = currentNode.Next;
+                    currentNode = currentNode.Next;  // 1 DE ACCESO
                 }
 
-                newNode.Next = currentNode.Next;
-                if (currentNode.Next != null)
+                newNode.Next = currentNode.Next; // 1 DE ASIGNACION
+                if (currentNode.Next != null) // 1 DE COMPARACION
                 {
-                    currentNode.Next.Previous = newNode;
+                    currentNode.Next.Previous = newNode; // 1 DE ASIGNACION
                 }
-                currentNode.Next = newNode;
-                newNode.Previous = currentNode;
+                currentNode.Next = newNode; // 1 DE ASIGNACION
+                newNode.Previous = currentNode; // 1 DE ASIGNACION
 
-                if (newNode.Next == Head)
+                if (newNode.Next == Head) // 1 DE ASIGNACION
                 {
-                    Head.Previous = newNode;
+                    Head.Previous = newNode; // 1 DE ASIGNACION
                 }
             }
         }
-        Count++;
+        Count++; // 1 DE ASIGNACION
     }
 
     public void Dequeue()

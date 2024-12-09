@@ -230,4 +230,80 @@ public class LaraCroftInventory : MonoBehaviour
         kit.SetActive(false);
         Debug.Log("antorcha...");
     }
+    public abstract class Item
+    {
+        public string nombre;
+        public Sprite icon;
+
+        public Item(string nombre, Sprite icon)
+        {
+            this.nombre = nombre;
+            this.icon = icon;
+        }
+        public abstract void Usar(LaraCroftInventory inventory);
+    }
+
+    public class Bow : Item
+    {
+        public int Damage;
+        public float Distance;
+
+        public Bow(int damage, float distance, Sprite sprite)
+            : base("Bow", sprite)
+        {
+            this.Damage = damage;
+            this.Distance = distance;
+        }
+
+        public override void Usar(LaraCroftInventory inventory)
+        {
+            Debug.Log($"Usando el arco {nombre}");
+        }
+    }
+
+    public class Kit : Item
+    {
+        public Kit(string nombre, Sprite sprite) 
+            : base(nombre, sprite) { }
+
+        public override void Usar(LaraCroftInventory inventory)
+        {
+            Debug.Log("Usando el kit");
+            inventory.UseKit();
+        }
+    }
+
+    public class Gun : Item
+    {
+        public Gun(string nombre, Sprite sprite) 
+            : base(nombre, sprite) { }
+
+        public override void Usar(LaraCroftInventory inventory)
+        {
+            Debug.Log("Usando la pistola");
+        }
+    }
+
+    public class Potion : Item
+    {
+        public Potion(string nombre, Sprite sprite) 
+            : base(nombre, sprite) { }
+
+        public override void Usar(LaraCroftInventory inventory)
+        {
+            Debug.Log("Usando la poción");
+            inventory.UsePotion();
+        }
+    }
+    public class TorchItem : Item
+    {
+        public TorchItem(string nombre, Sprite sprite) 
+            : base(nombre, sprite) { }
+
+        public override void Usar(LaraCroftInventory inventory)
+        {
+            Debug.Log("Usando la antorcha");
+            inventory.EquipTorch();
+        }
+    }
 }

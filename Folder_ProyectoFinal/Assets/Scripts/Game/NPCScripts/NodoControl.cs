@@ -9,34 +9,34 @@ public class NodoControl : MonoBehaviour
         adjacentNodes = new SimpleLinkedList<AdjacentNodeInfo>();
     }
 
-    public void SetRandomAdjacentNodes(SimpleLinkedList<NodoControl> allNodes)
+    public void SetRandomAdjacentNodes(SimpleLinkedList<NodoControl> allNodes) // O(N)
     {
-        int numberOfConnections = Random.Range(1, 4);
+        int numberOfConnections = Random.Range(1, 4);  // 1 operación
 
-        for (int i = 0; i < numberOfConnections; i++)
+        for (int i = 0; i < numberOfConnections; i++) // O(n)
         {
-            NodoControl randomNode = allNodes.Get(Random.Range(0, allNodes.Count()));
+            NodoControl randomNode = allNodes.Get(Random.Range(0, allNodes.Count()));  // O(1) + O(n)
 
-            if (randomNode != this && !IsAlreadyConnected(randomNode))
+            if (randomNode != this && !IsAlreadyConnected(randomNode))  // 1 + O(n)
             {
-                AddAdjacentNode(randomNode, Random.Range(1f, 4f));
-                randomNode.AddAdjacentNode(this, Random.Range(1f, 4f)); 
+                AddAdjacentNode(randomNode, Random.Range(1f, 4f));  // 1 operación
+                randomNode.AddAdjacentNode(this, Random.Range(1f, 4f));  // 1 operación
             }
         }
 
-        if (adjacentNodes.Count() == 0 && allNodes.Count() > 1)
+        if (adjacentNodes.Count() == 0 && allNodes.Count() > 1)  // O(1)
         {
-            NodoControl fallbackNode = allNodes.Get(Random.Range(0, allNodes.Count()));
-            if (fallbackNode != this)
+            NodoControl fallbackNode = allNodes.Get(Random.Range(0, allNodes.Count()));  // O(1)
+            if (fallbackNode != this) // 1 operación
             {
-                AddAdjacentNode(fallbackNode, Random.Range(1f, 4f));
-                fallbackNode.AddAdjacentNode(this, Random.Range(1f, 4f));
+                AddAdjacentNode(fallbackNode, Random.Range(1f, 4f)); // 1 operación
+                fallbackNode.AddAdjacentNode(this, Random.Range(1f, 4f)); // 1 operación
             }
         }
     }
     private bool IsAlreadyConnected(NodoControl node)
-    {
-        for (int i = 0; i < adjacentNodes.Count(); i++)
+    { 
+        for (int i = 0; i < adjacentNodes.Count(); i++) 
         {
             if (adjacentNodes.Get(i).node == node)
                 return true;
