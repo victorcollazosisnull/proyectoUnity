@@ -225,7 +225,7 @@ public class GameFlowController : MonoBehaviour
     {
         InputReader.BlockInputs(true);
         Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene("ScenePrototypes");
     }
     private void ChangeMusicToMenu()
     {

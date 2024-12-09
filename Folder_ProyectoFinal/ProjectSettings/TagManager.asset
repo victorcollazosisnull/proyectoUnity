@@ -12,6 +12,7 @@ TagManager:
   - diamond
   - Enemy
   - Boss
+  - win
   layers:
   - Default
   - TransparentFX

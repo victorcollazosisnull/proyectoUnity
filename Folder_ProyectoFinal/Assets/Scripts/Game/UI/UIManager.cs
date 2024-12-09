@@ -31,4 +31,13 @@ public class UIManager : MonoBehaviour
         diamonds = newDiamondCount;
         txtPRODiamonds.text = $"{diamonds}"; 
     }
+    public int GetEnemyKillCount()
+    {
+        return enemyKills;
+    }
+
+    public int GetDiamondCount()
+    {
+        return diamonds;
+    }
 }
