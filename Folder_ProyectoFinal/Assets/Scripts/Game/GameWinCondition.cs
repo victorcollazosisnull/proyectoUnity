@@ -5,7 +5,6 @@ using UnityEngine;
 public class GameWinCondition : MonoBehaviour
 {
     [Header("Requirements")]
-    public int requiredKills = 15;
     public int requiredDiamonds = 9;
 
     [Header("Dependencies")]
@@ -19,7 +18,7 @@ public class GameWinCondition : MonoBehaviour
 
     private void CheckWinCondition()
     {
-        if (uiManager != null &&uiManager.GetEnemyKillCount() >= requiredKills && uiManager.GetDiamondCount() >= requiredDiamonds)
+        if (uiManager != null && uiManager.GetDiamondCount() >= requiredDiamonds)
         {
             WinGame();
         }
