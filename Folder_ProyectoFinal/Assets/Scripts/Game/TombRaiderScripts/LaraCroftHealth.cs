@@ -4,6 +4,7 @@ using System.Collections;
 using UnityEngine.UI;
 using UnityEditor;
 using UnityEngine.SceneManagement;
+using System;
 
 public class LaraCroftHealth : MonoBehaviour
 {
@@ -13,21 +14,12 @@ public class LaraCroftHealth : MonoBehaviour
     private LaraCroftAnimations animations;
     private LaraCroftInputReader inputReader;
     private LaraCroftMovement movement;
-
+    private EnemyPatrol enemyPatrol;
     private bool isInvulnerable = false;
     public float invulnerabilityTime = 0.5f;
 
-    [Header("GameOver")]
-    public Image darkBackground;
-    public GameObject gameOverPanel;
-    public Button retryButton; 
-    public float fadeDuration = 3f;
-    [Header("Victory")]
-    public Image background;
-    public GameObject victoryPanel;
-    public Button goToMenu;
-    public float fade = 3f;
-    private bool isVictory = false;
+    public static event Action OnGameOver;
+    public static event Action OnVictory;
     private void Awake()
     {
         inputReader = GetComponent<LaraCroftInputReader>();
@@ -37,13 +29,6 @@ public class LaraCroftHealth : MonoBehaviour
         if (currentHealth <= 0)
         {
             currentHealth = maxHealth;
-        }
-
-        gameOverPanel.SetActive(false);
-
-        if (retryButton != null)
-        {
-            retryButton.onClick.AddListener(RestartLevel); 
         }
     }
 
@@ -55,11 +40,6 @@ public class LaraCroftHealth : MonoBehaviour
     private void OnDisable()
     {
         EnemyPatrol.OnPlayerDamage -= TakeDamage;
-
-        if (retryButton != null)
-        {
-            retryButton.onClick.RemoveListener(RestartLevel);
-        }
     }
 
     public void TakeDamage(float damageAmount)
@@ -80,7 +60,7 @@ public class LaraCroftHealth : MonoBehaviour
             PlayDieAnimation();
             movement.StopMovement();
             inputReader.BlockInputs(true);
-            StartCoroutine(HandleGameOver());
+            OnGameOver?.Invoke();
         }
         else
         {
@@ -96,10 +76,14 @@ public class LaraCroftHealth : MonoBehaviour
         }
         else if (other.gameObject.CompareTag("win"))
         {
-            StartCoroutine(HandleVictory());
+            HandleVictory();
         }
     }
-
+    private void HandleVictory()
+    {
+        movement.StopMovement();
+        OnVictory?.Invoke();
+    }
     private void PlayDieAnimation()
     {
         if (animations != null)
@@ -133,43 +117,6 @@ public class LaraCroftHealth : MonoBehaviour
         currentHealth = maxHealth;
         healthBar.RestarVida(currentHealth);
         Debug.Log("Salud restaurada como debe ser");
-    }
-
-    private IEnumerator HandleGameOver()
-    {
-        float elapsed = 0f;
-        Color startColor = darkBackground.color;
-        Color endColor = new Color(startColor.r, startColor.g, startColor.b, 1f);
-
-        while (elapsed < fadeDuration)
-        {
-            elapsed += Time.deltaTime;
-            darkBackground.color = Color.Lerp(startColor, endColor, elapsed / fadeDuration);
-            yield return null;
-        }
-
-        gameOverPanel.SetActive(true);
-        EnableCursor(); 
-    }
-    private IEnumerator HandleVictory()
-    {
-        if (isVictory) yield break; 
-
-        isVictory = true;
-
-        float elapsed = 0f;
-        Color startColor = background.color;
-        Color endColor = new Color(startColor.r, startColor.g, startColor.b, 1f);
-
-        while (elapsed < fade)
-        {
-            elapsed += Time.deltaTime;
-            background.color = Color.Lerp(startColor, endColor, elapsed / fade);
-            yield return null;
-        }
-
-        victoryPanel.SetActive(true);
-        EnableCursor();
     }
     private void EnableCursor()
     {

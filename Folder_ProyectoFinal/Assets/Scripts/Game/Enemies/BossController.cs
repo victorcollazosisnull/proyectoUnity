@@ -20,10 +20,6 @@ public class BossController : MonoBehaviour
     private int maxHealth = 100;
     private int currentHealth;
 
-    public Canvas victoryCanvas; 
-    public Image fadeImage; 
-    public Text victoryText; 
-    public Button backToMenuButton;
     private void Awake()
     {
         win.gameObject.SetActive(false);
@@ -35,10 +31,6 @@ public class BossController : MonoBehaviour
             healthSlider.value = currentHealth;
             healthSlider.gameObject.SetActive(false); 
         }
-        victoryCanvas.gameObject.SetActive(false);
-        fadeImage.gameObject.SetActive(false);
-        victoryText.gameObject.SetActive(false);
-        backToMenuButton.gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -57,7 +49,6 @@ public class BossController : MonoBehaviour
     {
         if (other.CompareTag("Player")) 
         {
-            Debug.Log("Jugador detectado");
             if (healthSlider != null)
             {
                 healthSlider.gameObject.SetActive(false);

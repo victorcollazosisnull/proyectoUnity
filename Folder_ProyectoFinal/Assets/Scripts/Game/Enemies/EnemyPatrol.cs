@@ -5,6 +5,7 @@ public class EnemyPatrol : MonoBehaviour
 {
     private Animator animator;
     public static event Action<float> OnPlayerDamage;
+
     [Header("Enemy Settings")]
     public float patrolSpeed = 1f;
     public float detectionRadius = 5f;
@@ -12,27 +13,41 @@ public class EnemyPatrol : MonoBehaviour
     public float attackRadius = 1.5f;
     private bool isAttacking = false;
     public Transform player;
+
     [Header("MRUV")]
-    public float initialSpeed = 4f; 
-    public float maxSpeed = 10f; 
+    public float initialSpeed = 4f;
+    public float maxSpeed = 10f;
     public float acceleration = 0.5f;
+
     // Variables MRUV
-    private float currentChaseSpeed;  
+    private float currentChaseSpeed;
     private float chaseTime;
+
     [Header("Enemy Patrol")]
     public SimpleLinkedList<NodoControl> allNodes;
     private NodoControl currentNode;
     private Vector3 positionToMove;
     private bool isChasing = false;
     private bool isPatrolling = true;
+
     [Header("Attack Settings")]
     public float minAttackDistance = 1.0f;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        EnemieLife.OnDeath += StopPatrolling;
     }
+
+    private void OnEnable()
+    {
+        EnemieLife.OnDeath += StopPatrolling;  
+    }
+
+    private void OnDisable()
+    {
+        EnemieLife.OnDeath -= StopPatrolling; 
+    }
+
     private void Update()
     {
         UpdateEnemyState();
@@ -45,10 +60,7 @@ public class EnemyPatrol : MonoBehaviour
             Patrol();
         }
     }
-    private void OnDestroy()
-    {
-        EnemieLife.OnDeath -= StopPatrolling;
-    }
+
     public void SetInitialNode(NodoControl initialNode)
     {
         currentNode = initialNode;
@@ -74,10 +86,12 @@ public class EnemyPatrol : MonoBehaviour
 
         CheckPlayerDistance();
     }
+
     public void StopPatrolling()
     {
-        isPatrolling = false;  
+        isPatrolling = false;
     }
+
     private void MoveToNextNode()
     {
         AdjacentNodeInfo nextNode = currentNode.GetRandomAdjacentNode();
@@ -96,25 +110,26 @@ public class EnemyPatrol : MonoBehaviour
         {
             if (!isChasing)
             {
-                StartChase(); 
+                StartChase();
             }
         }
         else if (distanceToPlayer > stopChaseRadius)
         {
-            StopChase(); 
+            StopChase();
         }
     }
+
     public void StartChase()
     {
         isChasing = true;
         chaseTime = 0f;
-        currentChaseSpeed = initialSpeed; 
+        currentChaseSpeed = initialSpeed;
     }
 
     public void StopChase()
     {
         isChasing = false;
-        chaseTime = 0f; 
+        chaseTime = 0f;
         currentChaseSpeed = initialSpeed;
         SetNewPosition(currentNode.transform.position);
     }
@@ -130,11 +145,11 @@ public class EnemyPatrol : MonoBehaviour
 
         if (distanceToPlayer <= minAttackDistance)
         {
-            if (!isAttacking)  
+            if (!isAttacking)
             {
-                StartAttack();  
+                StartAttack();
             }
-            transform.position = Vector3.MoveTowards(transform.position, transform.position, 0); 
+            transform.position = Vector3.MoveTowards(transform.position, transform.position, 0);
         }
         else if (distanceToPlayer > minAttackDistance)
         {
@@ -145,20 +160,21 @@ public class EnemyPatrol : MonoBehaviour
 
         if (distanceToPlayer > stopChaseRadius)
         {
-            StopChase(); 
+            StopChase();
         }
     }
+
     private void ResetChaseSpeed()
     {
-        chaseTime = 0f; 
-        currentChaseSpeed = initialSpeed; 
+        chaseTime = 0f;
+        currentChaseSpeed = initialSpeed;
     }
 
     private void LookAtMoveDirection(Vector3 targetPosition)
     {
         Vector3 direction = (targetPosition - transform.position).normalized;
-        direction.y = 0; 
-        if (direction.sqrMagnitude > 0.01f) 
+        direction.y = 0;
+        if (direction.sqrMagnitude > 0.01f)
         {
             Quaternion lookRotation = Quaternion.LookRotation(direction);
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
@@ -182,36 +198,39 @@ public class EnemyPatrol : MonoBehaviour
             isChasing = false;
         }
     }
+
     private void StartAttack()
     {
         isAttacking = true;
         animator.SetTrigger("Attack");
         isChasing = false;
 
-        Invoke("OnAttackHit", 0.5f); 
+        Invoke("OnAttackHit", 0.5f);
     }
 
     private void OnAttackHit()
     {
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-        if (distanceToPlayer <= attackRadius) 
+        if (distanceToPlayer <= attackRadius)
         {
             OnPlayerDamage?.Invoke(1f);
             Debug.Log("me ataco");
         }
         else
         {
-            EndAttack(); 
+            EndAttack();
         }
     }
+
     private void EndAttack()
     {
         isAttacking = false;
     }
+
     private void ReturnToPatrol()
     {
-        animator.SetTrigger("Walk"); 
+        animator.SetTrigger("Walk");
         isChasing = false;
     }
 }
